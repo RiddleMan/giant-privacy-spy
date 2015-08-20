@@ -10,7 +10,7 @@
   "mainInput": "main",
   "mainOutput": "main",
   "dependencies": {
-    "alt": "^0.16.5",
+    "flux": "^2.1.1",
     "material-ui": "^0.10.2",
     "normalize.css": "~3.0.3",
     "react": "0.13.x",
