@@ -1,10 +1,14 @@
 import React from 'react'; // eslint-disable-line
-import ClientReactApp from './ClientReactApp';
-import Router from 'react-router';
-const Route = Router.Route;
+import App from './App';
+import { LoginView, MainView } from './views/index';
+import { Authenticated } from './utils/index';
+import { Route, DefaultRoute } from 'react-router';
 
 export default (
-  <Route handler={ClientReactApp}>
-    <Route name="/" handler={ClientReactApp}/>
+  <Route handler={App}>
+    <DefaultRoute handler={LoginView}/>
+    <Route path="/main" handler={Authenticated}>
+        <Route name="index" path="/main/index" handler={MainView} />
+    </Route>
   </Route>
 );
