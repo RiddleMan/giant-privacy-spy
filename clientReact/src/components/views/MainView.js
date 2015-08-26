@@ -9,21 +9,16 @@ class MainView extends React.Component {
             timer: 0
         };
     }
-
     tick() {
         this.setState({
             timer: this.state.timer + 10
         });
     }
-
     componentDidMount() {
         this.timer = setInterval(this.tick.bind(this), 200);
     }
     componentWillUnmount() {
         clearInterval(this.timer);
-    }
-    dupa(){
-        console.log('asdfasdfsdf ');//eslint-disable-line
     }
     render() {
         return (
@@ -31,7 +26,6 @@ class MainView extends React.Component {
                 <h1>{this.state.timer}</h1>
                 <AppBar
                     title="Title"
-                    onLeftIconButtonTouchTap={this.dupa}
                     iconClassNameRight="muidocs-icon-navigation-expand-more" />
             </div>
         );
