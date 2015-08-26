@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react/addons';
 import { Styles } from 'material-ui';
 import { Link, RouteHandler } from 'react-router';
@@ -34,5 +32,8 @@ class App extends React.Component {
 App.childContextTypes = {
     muiTheme: React.PropTypes.object
 };
+
+console.log(DEBUG);
+console.log(API);
 
 export default App;

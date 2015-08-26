@@ -59,7 +59,11 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+        DEBUG: true,
+        API: '\'http://localhost:3000/\''
+    })
   ]
 
 };
