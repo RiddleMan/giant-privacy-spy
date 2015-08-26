@@ -1,0 +1,16 @@
+{
+  "ecmaFeatures": {
+    "modules": true
+  },
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "quotes": [ 1, "single" ],
+    "no-undef": 0,
+    "strict": 0,
+    "no-extra-semi": 1,
+    "no-underscore-dangle": 0
+  }
+}
