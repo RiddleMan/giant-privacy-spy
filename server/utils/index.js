@@ -1,3 +1,3 @@
-import EnvEnum from './envEnum';
+import envEnum from './envEnum';
 
-export const EnvEnum = EnvEnum;
+export const EnvEnum = envEnum;

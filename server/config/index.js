@@ -5,7 +5,7 @@ import production from './production';
 import test from './test';
 import development from './development';
 
-const env = process.NODE_ENV;
+const env = process.env.NODE_ENV;
 
 if(env === EnvEnum.PRODUCTION)
     Object.assign(config, production);
