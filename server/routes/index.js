@@ -1,9 +1,5 @@
-var express = require('express');
-var router = express.Router();
+import main from './main';
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.json({ title: 'Express' });
-});
-
-module.exports = router;
+export default function(app) {
+    app.use('/', main);
+}
