@@ -1,8 +1,18 @@
-html, body {
+$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+
+html, body, #content {
     margin: 0;
     padding: 0;
+
+    @extend .sc-fit-container;
 }
 
 body {
+    background-color: white;
     font-family: 'Roboto', sans-serif;
+}
+
+.sc-app {
+    @extend .sc-fit-container;
 }

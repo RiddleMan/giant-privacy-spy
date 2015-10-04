@@ -1,1 +1,6 @@
 node_modules
+src/vendor
+webpack.config.js
+webpack.*.config.js
+Gruntfile.js
+src/components/FileManager.js

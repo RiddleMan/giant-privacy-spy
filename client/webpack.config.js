@@ -9,61 +9,66 @@ var webpack = require('webpack');
 
 module.exports = {
 
-  output: {
-    filename: 'main.js',
-    publicPath: '/assets/',
-    path: '.tmp/assets/'
-  },
+    output: {
+        filename: 'main.js',
+        publicPath: '/assets/',
+        path: '.tmp/assets/'
+    },
 
-  cache: true,
-  debug: true,
-  devtool: 'sourcemap',
-  entry: [
-      'webpack/hot/only-dev-server',
-      './src/components/main.js'
-  ],
+    cache: true,
+    debug: true,
+    devtool: 'sourcemap',
+    entry: [
+        'webpack/hot/only-dev-server',
+        './src/index.js'
+    ],
 
-  stats: {
-    colors: true,
-    reasons: true
-  },
+    stats: {
+        colors: true,
+        reasons: true
+    },
 
-  resolve: {
-    extensions: ['', '.js', '.jsx'],
-    alias: {
-      'styles': __dirname + '/src/styles',
-      'mixins': __dirname + '/src/mixins',
-      'components': __dirname + '/src/components/'
-    }
-  },
-  module: {
-    preLoaders: [{
-      test: /\.(js|jsx)$/,
-      exclude: /node_modules/,
-      loader: 'eslint-loader'
-    }],
-    loaders: [{
-      test: /\.(js|jsx)$/,
-      exclude: /node_modules/,
-      loader: 'react-hot!babel-loader'
-    }, {
-      test: /\.scss/,
-      loader: 'style-loader!css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader?outputStyle=expanded'
-    }, {
-      test: /\.css$/,
-      loader: 'style-loader!css-loader'
-    }, {
-      test: /\.(png|jpg|woff|woff2)$/,
-      loader: 'url-loader?limit=8192'
-    }]
-  },
+    resolve: {
+        extensions: ['', '.js', '.jsx'],
+        alias: {
+            'gojs': __dirname + '/src/vendor/gojs/go-debug'
+        }
+    },
+    module: {
+        preLoaders: [{
+            test: /\.(js|jsx)$/,
+            exclude: [/node_modules/, /vendor/],
+            loader: 'eslint-loader'
+        }],
+        loaders: [{
+            test: /\.(js|jsx)$/,
+            exclude: [/node_modules/, /vendor/],
+            loader: 'babel-loader'
+        }, {
+            test: /\.scss/,
+            loader: 'style-loader!css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader'
+        }, {
+            test: /\.json/,
+            loader: 'json-loader'
+        }, {
+            test: /\.css$/,
+            loader: 'style-loader!css-loader'
+        }, {
+            test: /\.(png|jpg|ttf|svg|eot|woff|woff2)$/,
+            loader: 'url-loader?limit=8192'
+        }]
+    },
 
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.DefinePlugin({
-        DEBUG: true,
-        API: '\'http://localhost:3000/\''
-    })
-  ]
+    plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.DefinePlugin({
+            __DEV__: true,
+            __DEVTOOLS__: false,
+            __API_URL__: '\'http://localhost:3000/\''
+        }),
+        new webpack.ProvidePlugin({
+            'fetch': 'babel-loader!imports?this=>global!exports?global.fetch!whatwg-fetch'
+        })
+    ]
 
 };
