@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import App from './containers/App';
-import LoginPage from './containers/LoginPage';
+import { App, SignedPage, MainPage, LoginPage } from './containers';
 import Router, { Route } from 'react-router';
 
 export default class Routes extends Component {
@@ -8,6 +7,9 @@ export default class Routes extends Component {
         return (
             <Router>
                 <Route component={ App }>
+                    <Route component={ SignedPage }>
+                        <Route path="/" component={ MainPage } />
+                    </Route>
                     <Route path="/login" component={ LoginPage } />
                 </Route>
             </Router>
