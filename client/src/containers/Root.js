@@ -19,7 +19,7 @@ class Root extends Component {
         return (
             <div className="sc-app">
                 <Provider store={store}>
-                    {() => <Routes />}
+                    <Routes />
                 </Provider>
                 {__DEV__ && __DEVTOOLS__ ? <DebugPanel left top bottom>
                     <DevTools store={store} monitor={LogMonitor} />

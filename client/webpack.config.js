@@ -5,35 +5,23 @@
  * the subfolder /webpack-dev-server/ is visited. Visiting the root will not automatically reload.
  */
 'use strict';
-var webpack = require('webpack');
+import webpack from 'webpack';
+import path from 'path';
 
-module.exports = {
-
+export default {
     output: {
-        filename: 'main.js',
-        publicPath: '/assets/',
-        path: '.tmp/assets/'
+        path: path.join(__dirname, '.tmp'),
+        filename: 'bundle.js',
+        publicPath: '/static/'
     },
 
-    cache: true,
-    debug: true,
-    devtool: 'sourcemap',
+    devtool: 'eval',
     entry: [
+        'webpack-dev-server/client?http://localhost:3000',
         'webpack/hot/only-dev-server',
         './src/index.js'
     ],
 
-    stats: {
-        colors: true,
-        reasons: true
-    },
-
-    resolve: {
-        extensions: ['', '.js', '.jsx'],
-        alias: {
-            'gojs': __dirname + '/src/vendor/gojs/go-debug'
-        }
-    },
     module: {
         preLoaders: [{
             test: /\.(js|jsx)$/,
@@ -42,17 +30,11 @@ module.exports = {
         }],
         loaders: [{
             test: /\.(js|jsx)$/,
-            exclude: [/node_modules/, /vendor/],
-            loader: 'babel-loader'
-        }, {
-            test: /\.scss/,
-            loader: 'style-loader!css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader'
+            include: path.join(__dirname, 'src'),
+            loader: 'react-hot!babel-loader'
         }, {
             test: /\.json/,
             loader: 'json-loader'
-        }, {
-            test: /\.css$/,
-            loader: 'style-loader!css-loader'
         }, {
             test: /\.(png|jpg|ttf|svg|eot|woff|woff2)$/,
             loader: 'url-loader?limit=8192'
@@ -63,11 +45,10 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             __DEV__: true,
-            __DEVTOOLS__: false,
-            __API_URL__: '\'http://localhost:3000/\''
+            __DEVTOOLS__: true
         }),
         new webpack.ProvidePlugin({
-            'fetch': 'babel-loader!imports?this=>global!exports?global.fetch!whatwg-fetch'
+            fetch: 'babel-loader!imports?this=>global!exports?global.fetch!whatwg-fetch'
         })
     ]
 

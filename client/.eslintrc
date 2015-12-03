@@ -1,16 +1,17 @@
 {
-    "parser": "babel-eslint",
-    "rules": {
-        "strict": 0
-    },
     "plugins": [
         "react"
     ],
+    "parser": "babel-eslint",
+    "rules": {
+      "strict": 0
+    },
     "ecmaFeatures": {
         "jsx": true,
         "modules": true
     },
     "env": {
+        "node": true,
         "browser": true,
         "amd": true,
         "es6": true
@@ -85,6 +86,7 @@
         "no-sequences": 2,
         "no-throw-literal": 2,
         "no-unused-expressions": 2,
+        "no-unused-vars": [1, { "args": "after-used", "varsIgnorePattern": "React"}],
         "no-void": 2,
         "no-warning-comments": [0, {"terms": ["todo", "fixme"], "location": "start"}],
         "no-with": 2,
@@ -99,7 +101,7 @@
         "camelcase": 1,
         "comma-spacing": [1, {"before": false, "after": true}],
         "comma-style": [1, "last"],
-        "consistent-this": [1, "_this"],
+        "consistent-this": [2, "that"],
         "eol-last": 1,
         "func-names": 0,
         "func-style": 0,
