@@ -15,7 +15,7 @@ export default {
         publicPath: '/static/'
     },
 
-    devtool: 'eval',
+    devtool: 'sourcemap',
     entry: [
         'webpack-dev-server/client?http://localhost:3000',
         'webpack/hot/only-dev-server',
@@ -45,7 +45,7 @@ export default {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             __DEV__: true,
-            __DEVTOOLS__: true
+            __DEVTOOLS__: false
         }),
         new webpack.ProvidePlugin({
             fetch: 'babel-loader!imports?this=>global!exports?global.fetch!whatwg-fetch'

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import configureStore from '../store/configureStore';
 import Routes from '../routes';
@@ -21,7 +21,7 @@ class Root extends Component {
                 <Provider store={store}>
                     <Routes />
                 </Provider>
-                {__DEV__ && __DEVTOOLS__ ? <DebugPanel left top bottom>
+                {__DEV__ && __DEVTOOLS__ ? <DebugPanel right top bottom>
                     <DevTools store={store} monitor={LogMonitor} />
                 </DebugPanel> : <div />}
             </div>
