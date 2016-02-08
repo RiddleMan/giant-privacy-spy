@@ -3,15 +3,10 @@ import { Provider } from 'react-redux';
 import configureStore from '../store/configureStore';
 import Routes from '../routes';
 const store = configureStore();
-let LogMonitor;
 let DevTools;
-let DebugPanel;
 
 if(__DEV__ && __DEVTOOLS__) {
-    let dev = require('redux-devtools/lib/react');
-    LogMonitor = dev.LogMonitor;
-    DevTools = dev.DevTools;
-    DebugPanel = dev.DebugPanel;
+    DevTools = require('./DevTools').default;
 }
 
 class Root extends Component {
@@ -19,11 +14,11 @@ class Root extends Component {
         return (
             <div className="sc-app">
                 <Provider store={store}>
-                    <Routes />
+                    <div className="sc-app">
+                        <Routes />
+                        {__DEV__ && __DEVTOOLS__ ? <DevTools /> : <div />}
+                    </div>
                 </Provider>
-                {__DEV__ && __DEVTOOLS__ ? <DebugPanel right top bottom>
-                    <DevTools store={store} monitor={LogMonitor} />
-                </DebugPanel> : <div />}
             </div>
         );
     }

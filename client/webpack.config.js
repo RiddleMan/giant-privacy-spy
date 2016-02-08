@@ -45,7 +45,7 @@ export default {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             __DEV__: true,
-            __DEVTOOLS__: false
+            __DEVTOOLS__: true
         }),
         new webpack.ProvidePlugin({
             fetch: 'babel-loader!imports?this=>global!exports?global.fetch!whatwg-fetch'

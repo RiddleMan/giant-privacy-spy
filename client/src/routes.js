@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { App, MainPage } from './containers';
-import Router, { Route } from 'react-router';
+import { Router, Route, browserHistory } from 'react-router';
 
 export default class Routes extends Component {
     render() {
         return (
-            <Router>
+            <Router history={browserHistory}>
                 <Route component={ App }>
                     {/*<Route component={ SignedPage }>
                         <Route path="/" component={ MainPage } />

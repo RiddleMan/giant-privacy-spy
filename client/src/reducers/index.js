@@ -1,5 +1,6 @@
-//import { combineReducers } from 'redux';
+import { combineReducers } from 'redux';
+import { routeReducer } from 'react-router-redux';
 
-export default function(state) {
-    return state;
-};
+export default combineReducers({
+    routing: routeReducer
+});

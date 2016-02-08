@@ -1,9 +1,14 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { syncHistory } from 'react-router-redux';
+import { browserHistory } from 'react-router';
 
 import rootReducer from '../reducers';
 
+const reduxRouterMiddleware = syncHistory(browserHistory);
+
 let middlewareArray = [
+    reduxRouterMiddleware,
     thunkMiddleware
 ];
 
@@ -19,15 +24,21 @@ if(__DEV__) {
 
 const middleware = applyMiddleware(...middlewareArray);
 
+function getDebugSessionKey() {
+    const matches = window.location.href.match(/[?&]debug_session=([^&]+)\b/);
+    return (matches && matches.length > 0) ? matches[1] : null;
+}
+
 export default function configureStore(initialState) {
     let createStoreWithMiddleware;
     if (__DEV__ && __DEVTOOLS__) {
-        const { devTools, persistState } = require('redux-devtools');
+        const DevTools = require('../containers/DevTools');
+        const { persistState } = require('redux-devtools');
 
         createStoreWithMiddleware = compose(
             middleware,
-            devTools(),
-            persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
+            DevTools.default.instrument(),
+            persistState(getDebugSessionKey())
         )(createStore);
     } else {
         createStoreWithMiddleware = middleware(createStore);
@@ -43,6 +54,8 @@ export default function configureStore(initialState) {
             store.replaceReducer(nextReducer);
         });
     }
+
+    reduxRouterMiddleware.listenForReplays(store);
     /*eslint-enable */
     return store;
 }
