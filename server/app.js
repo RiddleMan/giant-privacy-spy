@@ -7,8 +7,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-const routes = require('./routes');
-const auth = require('./auth');
+const routes = require('./api');
 
 let app = express();
 
@@ -16,8 +15,6 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-
-auth.init(app);
 routes(app);
 
 // catch 404 and forward to error handler

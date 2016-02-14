@@ -1,19 +1,18 @@
 'use strict';
 
 const utils = require('../utils');
+const EnvEnum = utils.EnvEnum;
 let config = {};
-
-const production = require('./production');
-const test = require('./test');
-const development = require('./development');
-
 const env = process.env.NODE_ENV;
 
-if(env === utils.EnvEnum.PRODUCTION)
-    Object.assign(config, production);
-else if(env === utils.EnvEnum.TEST)
-    Object.assign(config, test);
-else
-    Object.assign(config, development);
+switch (env) {
+case EnvEnum.PRODUCTION:
+    Object.assign(config, require('./production'));
+    break;
+case EnvEnum.TEST:
+    Object.assign(config, require('./test'));
+default:
+    Object.assign(config, require('./development'))
+}
 
 module.exports = config;
