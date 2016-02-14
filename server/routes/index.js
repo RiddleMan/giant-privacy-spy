@@ -1,5 +1,5 @@
-import main from './main';
+const main = require('./main');
 
-export default function(app) {
+module.exports = function(app) {
     app.use('/', main);
 }

@@ -1,3 +1,5 @@
-import envEnum from './envEnum';
+const envEnum = require('./envEnum');
 
-export const EnvEnum = envEnum;
+module.exports = {
+    EnvEnum: envEnum
+};

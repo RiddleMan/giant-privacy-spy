@@ -1,12 +1,14 @@
-import express from 'express';
-import path from 'path';
-import favicon from 'serve-favicon';
-import logger from 'morgan';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
+'use strict';
 
-import routes from './routes';
-import { init as auth } from './auth';
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+
+const routes = require('./routes');
+const auth = require('./auth');
 
 let app = express();
 
@@ -15,12 +17,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-auth(app);
+auth.init(app);
 routes(app);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  let err = new Error('Not Found');
+  let err = new Error('Not Found')
   err.status = 404;
   next(err);
 });
@@ -50,4 +52,4 @@ app.use((err, req, res, next) => {
 });
 
 
-export default app;
+module.exports = app;

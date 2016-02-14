@@ -1,17 +1,19 @@
-import { EnvEnum } from '../utils';
+'use strict';
+
+const utils = require('../utils');
 let config = {};
 
-import production from './production';
-import test from './test';
-import development from './development';
+const production = require('./production');
+const test = require('./test');
+const development = require('./development');
 
 const env = process.env.NODE_ENV;
 
-if(env === EnvEnum.PRODUCTION)
+if(env === utils.EnvEnum.PRODUCTION)
     Object.assign(config, production);
-else if(env === EnvEnum.TEST)
+else if(env === utils.EnvEnum.TEST)
     Object.assign(config, test);
 else
     Object.assign(config, development);
 
-export default config;
+module.exports = config;

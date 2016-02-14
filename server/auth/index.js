@@ -1,16 +1,18 @@
-import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as JWTStrategy } from 'passport-jwt';
-import authRoutes from './routes';
+'use strict';
 
-passport.use(new LocalStrategy({
+const passport = require('passport');
+const passportLocal= require('passport-local');
+const passportJwt = require('passport-jwt');
+const authRoutes = require('./routes');
+
+passport.use(new passportLocal.Strategy({
     session: false
 }, (username, password, cb) => {
     //TODO: restore user from DB
     return cb(null, {id:'asdf234'});
 }));
 
-passport.use(new JWTStrategy({
+passport.use(new passportJwt.JWTStrategy({
     //TODO: take secret from config
     secretOrKey: 'asdfaaa',
     session: false
@@ -26,12 +28,12 @@ passport.serializeUser(function(user, cb) {
 passport.deserializeUser(function(id, cb) {
   cb(null, { id: id });
 });
-
-export const init = (app) => {
-    app.use(passport.initialize());
-    authRoutes(app);
-}
-
-export const IsAuth = (req, res, next) => {
-    passport.authenticate('jwt')(req, res, next);
-}
+module.exports = {
+    init: (app) => {
+        app.use(passport.initialize());
+        authRoutes(app);
+    },
+    IsAuth: (req, res, next) => {
+        passport.authenticate('jwt')(req, res, next);
+    }
+};
