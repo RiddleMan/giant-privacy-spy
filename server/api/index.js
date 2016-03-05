@@ -1,15 +1,14 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
+const mainRouter = express.Router();
 
-const routes = {
-    '/auth': require('./auth')
-};
+const routes = [
+    require('./media')
+];
 
-module.exports = (app) => {
-    Object.keys(routes)
-        .forEach(routePath =>
-            router.use(routePath, routes[routePath]));
+routes.forEach(routePath =>
+    router.use(routePath));
 
-    app.use('/api', router);
-}
+mainRouter.use('/api', router);
+module.exports = mainRouter;

@@ -2,5 +2,8 @@ module.exports = {
     auth: {
         secret: 'secret',
     },
-    db: 'localhost:9200'
+    mongo: {
+        conn: 'mongodb://localhost/giant-privacy-spy',
+        autoIndex: true
+    }
 };
