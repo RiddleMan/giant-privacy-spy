@@ -1,7 +1,6 @@
 const api = require('../utils').api('/media');
 const isLogged = require('../auth').isLogged;
 const Busboy = require('busboy');
-const inspect = require('util').inspect;
 const Media = require('../models/Media');
 
 api.get('/', isLogged, (req, res) => {
@@ -60,7 +59,6 @@ api.get('/static/:id', (req, res) => {
         if(err)
             return res.sendStatus(500);
 
-        console.dir(file);
         res.writeHead(200, {
             'Content-type': file.mimeType //TODO: Forever cache
         });
