@@ -7,6 +7,7 @@ const errno = require('errno');
 const parallel = require('run-parallel');
 const getImageExif = require('./utils').getImageExif;
 const getExifCoordinates = require('./utils').getExifCoordinates;
+const getExifDate = require('./utils').getExifDate;
 
 const getGrid = () => {
     Grid.mongo = mongoose.mongo;
@@ -48,6 +49,9 @@ MediaSchema.options.toJSON.transform = function(doc, ret) {
 
 MediaSchema.virtual('createdDate')
     .get(function() {
+        if(this.exif)
+            return getExifDate(this.exif).toISOString();
+
         return this._id.getTimestamp();
     });
 

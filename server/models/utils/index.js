@@ -44,7 +44,16 @@ const getExifCoordinates = (exif) => {
     return res;
 };
 
+const getExifDate = (exif) => {
+    const dateStr = exif.exif.CreateDate;
+    const dateHourArr = dateStr.split(' ');
+    dateHourArr[0] = dateHourArr[0].replace(/:/g, '/');
+
+    return new Date(dateHourArr.join(' '));
+};
+
 module.exports = {
     getImageExif,
-    getExifCoordinates
+    getExifCoordinates,
+    getExifDate
 };
