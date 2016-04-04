@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { syncHistory } from 'react-router-redux';
 import { browserHistory } from 'react-router';
-
+import persistState from 'redux-localstorage';
 import rootReducer from '../reducers';
 
 const reduxRouterMiddleware = syncHistory(browserHistory);
@@ -44,7 +44,13 @@ export default function configureStore(initialState) {
         createStoreWithMiddleware = middleware(createStore);
     }
 
-    const store = createStoreWithMiddleware(rootReducer, initialState);
+    const createPersistenStore = compose(
+        persistState('token', {
+            key: 'g.p.s.'
+        })
+    )(createStoreWithMiddleware);
+
+    const store = createPersistenStore(rootReducer, initialState);
 
     /*eslint-disable */
     if (__DEV__ && module.hot) {

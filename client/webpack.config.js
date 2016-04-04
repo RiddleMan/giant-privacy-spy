@@ -8,6 +8,8 @@
 import webpack from 'webpack';
 import path from 'path';
 
+const API_URL = process.env['__API_URL__'] || 'http://localhost:3001/'; //eslint-disable-line
+
 export default {
     output: {
         path: path.join(__dirname, '.tmp'),
@@ -15,7 +17,7 @@ export default {
         publicPath: '/static/'
     },
 
-    devtool: 'sourcemap',
+    devtool: 'eval-source-map',
     entry: [
         'webpack-dev-server/client?http://localhost:3000',
         'webpack/hot/only-dev-server',
@@ -31,12 +33,17 @@ export default {
         loaders: [{
             test: /\.(js|jsx)$/,
             include: path.join(__dirname, 'src'),
-            loader: 'react-hot!babel-loader'
-        }, {
+            loader: 'babel-loader'
+        },
+        {
+            test: /\.scss/,
+            loader: 'style-loader!css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader'
+        },
+        {
             test: /\.json/,
             loader: 'json-loader'
         }, {
-            test: /\.(png|jpg|ttf|svg|eot|woff|woff2)$/,
+            test: /\.(png|jpg|ttf|svg|eot|woff|woff2)/,
             loader: 'url-loader?limit=8192'
         }]
     },
@@ -45,7 +52,8 @@ export default {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             __DEV__: true,
-            __DEVTOOLS__: true
+            __DEVTOOLS__: false,
+            __API_URL__: `\'${API_URL}\'`
         }),
         new webpack.ProvidePlugin({
             fetch: 'babel-loader!imports?this=>global!exports?global.fetch!whatwg-fetch'

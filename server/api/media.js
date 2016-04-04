@@ -3,11 +3,39 @@ const isLogged = require('../auth').isLogged;
 const Busboy = require('busboy');
 const Media = require('../models/Media');
 
+api.get('/boxes', isLogged, (req, res) => {
+    Media.boxFiles({
+        startPosition: req.query.startPos,
+        endPosition: req.query.endPos,
+
+        //TODO: search: 'hakunamatata'
+        after: req.query.after,
+        before: req.query.before,
+        extensions: req.query.extensions
+    }, (err, results) => {
+        if(err)
+            return res.sendStatus(500);
+
+        res.send(results);
+    });
+});
+
 api.get('/', isLogged, (req, res) => {
-    //TODO: Filter options. Hugeeee.
-    res.send({
-        user: req.user,
-        asdf: 'asdf'
+    Media.unboxFiles({
+        box: req.query.box,
+
+        //TODO: search: 'hakunamatata'
+        after: req.query.after,
+        before: req.query.before,
+        extensions: req.query.extensions,
+        size: req.query.size && parseInt(req.query.size),
+        page: req.query.page && parseInt(req.query.page),
+        sort: req.query.sort
+    }, (err, results) => {
+        if(err)
+            return res.sendStatus(500);
+
+        res.send(results);
     });
 });
 
@@ -40,6 +68,7 @@ api.post('/', isLogged, (req, res) => {
             name: filename,
             mimeType
         }, (err) => {
+            console.dir(err);
             if(err)
                 return res.sendStatus(500);
 
