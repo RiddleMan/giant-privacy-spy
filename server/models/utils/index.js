@@ -1,17 +1,10 @@
 'use strict';
-const streamToBuffer = require('stream-to-buffer');
-const waterfall = require('run-waterfall');
 const ExifImage = require('exif').ExifImage;
 
-const getImageExif = (fileReadStream, cb) => {
-    waterfall([
-        streamToBuffer.bind(null, fileReadStream),
-        (image, cb) => {
-            new ExifImage({ //eslint-disable-line
-                image
-            }, cb);
-        }
-    ], cb);
+const getImageExif = (image, cb) => {
+    new ExifImage({ //eslint-disable-line
+        image
+    }, cb);
 };
 
 const convertToDegree = (dms) => {
@@ -28,6 +21,7 @@ const getExifCoordinates = (exif) => {
     const longitude = exif.gps.GPSLongitude;
     const longitudeRef = exif.gps.GPSLongitudeRef;
     const res = {
+        type: 'Point',
         coordinates: []
     };
 
@@ -52,8 +46,13 @@ const getExifDate = (exif) => {
     return new Date(dateHourArr.join(' '));
 };
 
+const getFloatCoord = (coordE7) => {
+    return coordE7 / 10000000;
+};
+
 module.exports = {
     getImageExif,
     getExifCoordinates,
-    getExifDate
+    getExifDate,
+    getFloatCoord
 };

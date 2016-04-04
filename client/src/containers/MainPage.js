@@ -1,7 +1,11 @@
-import React, { Component } from 'react';
-import { AppBar, FloatingButton } from '../components/layout';
+import React, { cloneElement, Component } from 'react';
+import { AppBar, AddMenu } from '../components/layout';
 import { Map } from '../components/map';
 import { fitContainer } from '../utils/styles';
+import { connect } from 'react-redux';
+import { centerChange } from '../actions/map';
+import { goToList } from '../actions/list';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 const pageSettings = {
     appBarHeight: '64px'
@@ -23,36 +27,55 @@ const LowerContainer = (props) => {
 };
 
 class MainPage extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            markers: [{
-                position: {
-                    lat: 25.0112183,
-                    lng: 121.52067570000001
-                },
-                key: 'Taiwan',
-                defaultAnimation: 2
-            }]
-        };
-    }
-    
     render() {
-        const { markers } = this.state;
+        const {
+            map: {
+                boxes
+            },
+            onMarkerClick,
+            centerChange,
+            goToList,
+            children,
+            location
+        } = this.props;
 
         return (
             <div
-                style={fitContainer()}
-                >
+                style={fitContainer()}>
                 <AppBar title="G.P.S." />
                 <LowerContainer>
-                    <Map markers={markers} />
-                    <FloatingButton />
+                    <Map
+                        onMarkerClick={goToList}
+                        onCenterChange={centerChange}
+                        boxes={boxes} />
+                    <AddMenu />
+                    <ReactCSSTransitionGroup
+                        component="div"
+                        transitionName="slide"
+                        transitionEnterTimeout={500}
+                        transitionLeaveTimeout={500}
+                        style={{
+                            zIndex: 3
+                        }}>
+                        {cloneElement(children || <div />, {
+                            key: location.pathname
+                        })}
+                    </ReactCSSTransitionGroup>
                 </LowerContainer>
             </div>
         );
     }
 }
 
-export default MainPage;
+const mapStateToProps = (state) => {
+    const { map } = state;
+
+    return {
+        map
+    };
+};
+
+export default connect(mapStateToProps, {
+    goToList,
+    centerChange
+})(MainPage);

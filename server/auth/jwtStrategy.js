@@ -8,7 +8,7 @@ const User = require('../models/User');
 const jwtOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
     secretOrKey: config.jwt.secret
-}
+};
 
 const register = () => {
     passport.use(new JwtStrategy(jwtOptions, (payload, done) => {
@@ -26,7 +26,7 @@ const generateToken = (userId, cb) => {
     jwt.sign({
         id: userId
     }, config.jwt.secret, {}, cb.bind(null, null));
-}
+};
 
 const getToken = (user, password, cb) => {
     User.findOne({
@@ -35,13 +35,12 @@ const getToken = (user, password, cb) => {
         if(err)
             return cb(err, null);
 
-        if(user.authenticate(password)) {
-            generateToken(user.id, cb);
-        } else {
-            cb(err, false);
+        if(user && user.authenticate(password)) {
+            return generateToken(user.id, cb);
         }
-    })
 
+        cb(new Error('User doesn\'t exists or password is wrong'));
+    });
 };
 
 module.exports = {
