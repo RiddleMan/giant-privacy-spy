@@ -53,6 +53,13 @@ export class Map extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            defaultCenter: {
+                lat: -25.363882,
+                lng: 131.044922
+            }
+        };
+
         this.onCenterChangeInternal = this.onCenterChangeInternal.bind(this);
     }
 
@@ -67,16 +74,25 @@ export class Map extends Component {
         });
     }
 
+    componentDidMount() {
+        navigator.geolocation.getCurrentPosition((position) => {
+            this.map.props.map.setCenter({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            });
+        });
+    }
+
     render() {
         const { onMarkerClick } = this.props;
-
+        const { defaultCenter } = this.state;
         return (
             <MapLoader>
                 <GoogleMap
                     ref={(x) => this.map = x}
                     onCenterChanged={this.onCenterChangeInternal}
                     defaultZoom={3}
-                    defaultCenter={{lat: -25.363882, lng: 131.044922}}>
+                    defaultCenter={defaultCenter}>
 
                     {this.props.boxes.map((box) =>
                         <BoxMarker
