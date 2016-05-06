@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { centerChange } from '../actions/map';
 import { goToList } from '../actions/list';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import Snackbar from 'material-ui/lib/snackbar';
+import { hide } from '../actions/upload';
 
 const pageSettings = {
     appBarHeight: '64px'
@@ -27,6 +29,17 @@ const LowerContainer = (props) => {
 };
 
 class MainPage extends Component {
+    constructor(props) {
+        super(props);
+
+        this.onClose = this.onClose.bind(this);
+    }
+
+    onClose() {
+        const { hide } = this.props;
+        hide();
+    }
+
     render() {
         const {
             map: {
@@ -36,7 +49,8 @@ class MainPage extends Component {
             centerChange,
             goToList,
             children,
-            location
+            location,
+            isOpen
         } = this.props;
 
         return (
@@ -62,20 +76,29 @@ class MainPage extends Component {
                         })}
                     </ReactCSSTransitionGroup>
                 </LowerContainer>
+                <Snackbar
+                    open={isOpen}
+                    message="File(s) uploaded successfully"
+                    autoHideDuration={3000}
+                    onRequestClose={this.onClose} />
             </div>
         );
     }
 }
 
 const mapStateToProps = (state) => {
-    const { map } = state;
+    const { map, upload: {
+        isOpen
+    } } = state;
 
     return {
-        map
+        map,
+        isOpen
     };
 };
 
 export default connect(mapStateToProps, {
+    hide,
     goToList,
     centerChange
 })(MainPage);

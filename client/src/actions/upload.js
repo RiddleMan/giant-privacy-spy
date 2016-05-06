@@ -7,7 +7,9 @@ import {
     UPLOAD_FILE_REQUEST,
     UPLOAD_FILE_RESPONSE,
     UPLOAD_TRACK_REQUEST,
-    UPLOAD_TRACK_RESPONSE
+    UPLOAD_TRACK_RESPONSE,
+
+    HIDE
 } from '../constants/upload';
 
 const uploadFileRequest = () => ({
@@ -53,3 +55,7 @@ export const uploadTrack = (file) => {
         .then(() => dispatch(uploadTrackResponse()));
     };
 };
+
+export const hide = () => ({
+    type: HIDE
+});

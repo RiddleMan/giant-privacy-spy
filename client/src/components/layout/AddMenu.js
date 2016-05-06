@@ -6,7 +6,7 @@ import Map from 'material-ui/lib/svg-icons/maps/map';
 import Place from 'material-ui/lib/svg-icons/maps/place';
 import { fileOpen } from '../../utils/files';
 import { connect } from 'react-redux';
-import { uploadFile, uploadTrack } from '../../actions/upload';
+import { uploadFile, uploadTrack, hide } from '../../actions/upload';
 
 class AddMenu extends Component {
     constructor(props) {
@@ -38,33 +38,45 @@ class AddMenu extends Component {
     }
 
     render() {
+        const { isUploading } = this.props;
+
         return (
             <IconMenu
-            style={{
-                position: 'absolute',
-                bottom: '10px',
-                right: '10px'
-            }}
-            iconButtonElement={<FloatingButton />}
-            anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-            targetOrigin={{horizontal: 'right', vertical: 'bottom'}}
-            >
-            <MenuItem
-                onClick={this.onTrackUpload}
-                primaryText="Track"
-                leftIcon={<Map />} />
-            <MenuItem
-                onClick={this.onFileUpload}
-                primaryText="File(s)"
-                leftIcon={<Place />}/>
+                style={{
+                    position: 'absolute',
+                    bottom: '10px',
+                    right: '10px'
+                }}
+                iconButtonElement={
+                    <FloatingButton
+                        isLoading={isUploading}/>}
+                anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+                targetOrigin={{horizontal: 'right', vertical: 'bottom'}}>
+                    <MenuItem
+                        onClick={this.onTrackUpload}
+                        primaryText="Track"
+                        leftIcon={<Map />} />
+                    <MenuItem
+                        onClick={this.onFileUpload}
+                        primaryText="File(s)"
+                        leftIcon={<Place />}/>
             </IconMenu>
         );
     }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state) => {
+    const { isUploading, isSuccess, isOpen } = state.upload;
+
+    return {
+        isUploading,
+        isSuccess,
+        isOpen
+    };
+};
 
 export default connect(mapStateToProps, {
+    hide,
     uploadFile,
     uploadTrack
 })(AddMenu);
