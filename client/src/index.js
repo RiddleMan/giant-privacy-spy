@@ -3,12 +3,10 @@
 import React from 'react';
 import { render } from 'react-dom';
 import Root from './containers/Root';
-import configureStore from './store/configureStore';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import './styles/main.scss';
 import { AppContainer } from 'react-hot-loader';
 
-const store = configureStore();
 injectTapEventPlugin();
 
 if(__DEV__)
@@ -17,18 +15,20 @@ if(__DEV__)
 const content = document.getElementById('content');
 
 render(
-    <AppContainer
-        component={Root}
-        props={{ store }} />,
+    <AppContainer>
+        <Root />
+    </AppContainer>,
     content
 );
 
 if(module.hot) {
     module.hot.accept('./containers/Root', () => {
+        const NextRoot = require('./containers/Root').default;
+
         render(
-            <AppContainer
-                component={require('./containers/Root').default}
-                props={{ store }} />,
+            <AppContainer>
+                <NextRoot />
+            </AppContainer>,
             content
         );
     });
