@@ -5,11 +5,8 @@ const Track = require('../models/Track');
 const through = require('through2');
 const JSONStream = require('JSONStream');
 
-const fs = require('fs');
-const path = require('path');
-
 const trackStream = (user) => {
-    return through.obj((googleTrack, enc, cb) => {
+    return through.obj(function(googleTrack, enc, cb) {
         const track = new Track(googleTrack);
         track._user = user;
 

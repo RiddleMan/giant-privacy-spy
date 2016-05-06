@@ -68,7 +68,6 @@ api.post('/', isLogged, (req, res) => {
             name: filename,
             mimeType
         }, (err) => {
-            console.dir(err);
             if(err)
                 return res.sendStatus(500);
 
