@@ -16,7 +16,7 @@ const DownloadButton = (props) => {
     };
 
     return (
-        <IconButton onClick={onDownload}>
+        <IconButton onTouchTap={onDownload}>
             <FileDownload color="white"/>
         </IconButton>
     );

@@ -6,6 +6,7 @@ export const AppBar = (props) => {
 
     return (
         <AppBarMUI
-            title={title} />
+            title={title}
+            {...props}/>
     );
 };

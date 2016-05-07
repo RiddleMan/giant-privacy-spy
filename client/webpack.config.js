@@ -8,7 +8,7 @@
 import webpack from 'webpack';
 import path from 'path';
 
-const API_URL = process.env['__API_URL__'] || 'http://localhost:3001/'; //eslint-disable-line
+const API_URL = process.env['__API_URL__'] || 'http://0.0.0.0:3001/'; //eslint-disable-line
 
 export default {
     output: {
@@ -19,7 +19,7 @@ export default {
 
     devtool: 'eval-source-map',
     entry: [
-        'webpack-dev-server/client?http://localhost:3000',
+        'webpack-dev-server/client?http://0.0.0.0:3000',
         'webpack/hot/only-dev-server',
         'react-hot-loader/patch',
         './src/index.js'

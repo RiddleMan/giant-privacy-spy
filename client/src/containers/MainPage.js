@@ -8,7 +8,8 @@ import { goToList } from '../actions/list';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import Snackbar from 'material-ui/Snackbar';
 import { hide } from '../actions/upload';
-import Drawer from 'material-ui/Drawer';
+import { toggleLeftNav } from '../actions/layout';
+import DrawerPage from './DrawerPage';
 
 const pageSettings = {
     appBarHeight: '64px'
@@ -33,10 +34,15 @@ class MainPage extends Component {
     constructor(props) {
         super(props);
 
-        this.onClose = this.onClose.bind(this);
+        this.onSnackClose = this.onSnackClose.bind(this);
+        this.onDrawerOpen = this.onDrawerOpen.bind(this);
     }
 
-    onClose() {
+    onDrawerOpen() {
+        this.props.toggleLeftNav(true);
+    }
+
+    onSnackClose() {
         const { hide } = this.props;
         hide();
     }
@@ -46,18 +52,20 @@ class MainPage extends Component {
             map: {
                 boxes
             },
-            onMarkerClick,
             centerChange,
             goToList,
             children,
             location,
-            isOpen
+            isOpen,
+            leftNav
         } = this.props;
 
         return (
             <div
                 style={fitContainer()}>
-                <AppBar title="G.P.S." />
+                <AppBar
+                    title="G.P.S."
+                    onLeftIconButtonTouchTap={this.onDrawerOpen} />
                 <LowerContainer>
                     <Map
                         onMarkerClick={goToList}
@@ -77,17 +85,12 @@ class MainPage extends Component {
                         })}
                     </ReactCSSTransitionGroup>
                 </LowerContainer>
-                {/*<Drawer
-                    docked={false}
-                    width={200}
-                    open={this.state.open}
-                    onRequestChange={open => this.setState({open})}>
-                </Drawer>*/}
+                <DrawerPage />
                 <Snackbar
                     open={isOpen}
                     message="File(s) uploaded successfully"
                     autoHideDuration={3000}
-                    onRequestClose={this.onClose} />
+                    onRequestClose={this.onSnackClose} />
             </div>
         );
     }
@@ -96,16 +99,20 @@ class MainPage extends Component {
 const mapStateToProps = (state) => {
     const { map, upload: {
         isOpen
+    }, layout: {
+        leftNav
     } } = state;
 
     return {
         map,
-        isOpen
+        isOpen,
+        leftNav
     };
 };
 
 export default connect(mapStateToProps, {
     hide,
     goToList,
-    centerChange
+    centerChange,
+    toggleLeftNav
 })(MainPage);

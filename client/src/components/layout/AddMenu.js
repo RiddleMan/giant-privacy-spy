@@ -53,11 +53,11 @@ class AddMenu extends Component {
                 anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
                 targetOrigin={{horizontal: 'right', vertical: 'bottom'}}>
                     <MenuItem
-                        onClick={this.onTrackUpload}
+                        onTouchTap={this.onTrackUpload}
                         primaryText="Track"
                         leftIcon={<Map />} />
                     <MenuItem
-                        onClick={this.onFileUpload}
+                        onTouchTap={this.onFileUpload}
                         primaryText="File(s)"
                         leftIcon={<Place />}/>
             </IconMenu>

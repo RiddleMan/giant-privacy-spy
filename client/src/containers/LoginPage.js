@@ -16,9 +16,20 @@ class LoginPage extends Component {
         };
 
         return (
-            <div>
+            <div style={{
+                width: '100%',
+                height: '100%',
+                overflow: 'hidden'
+            }}>
                 <picture style={pictureStyle}>
-                    <img src={this.bgResolver()} alt="background" />
+                    <img
+                        style={{
+                            width: '110%',
+                            height: '110%',
+                            marginTop: '-5%',
+                            marginLeft: '-5%'
+                        }}
+                        src={this.bgResolver()} alt="background" />
                 </picture>
                 <LoginForm />
             </div>

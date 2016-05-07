@@ -1,6 +1,7 @@
 import param from 'jquery-param';
 
 const LOGIN = __API_URL__ + 'auth/login';
+const AUTH = __API_URL__ + 'auth';
 const GET_BOXES = __API_URL__ + 'api/media/boxes';
 const GET_UNBOXED = __API_URL__ + 'api/media';
 const GET_FILE_STATIC = __API_URL__ + 'api/media/static/';
@@ -117,5 +118,11 @@ export const login = ({
     }));
 };
 
-
 export const getFileUrl = (fileId) => `${GET_FILE_STATIC}${fileId}`;
+
+export const getUserInfo = (token) => {
+    return fetch(AUTH, getAuthorizedRequest({
+        token
+    }))
+    .then((r) => r.json());
+};
