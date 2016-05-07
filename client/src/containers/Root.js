@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Provider } from 'react-redux';
 import Routes from '../routes';
 import configureStore from '../store/configureStore';
 const store = configureStore();
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 let DevTools;
 
@@ -11,6 +12,12 @@ if(__DEV__ && __DEVTOOLS__) {
 }
 
 class Root extends Component {
+    getChildContext() {
+        return {
+            muiTheme: getMuiTheme()
+        };
+    }
+
     render() {
         return (
             <div className="sc-app">
@@ -24,5 +31,9 @@ class Root extends Component {
         );
     }
 }
+
+Root.childContextTypes = {
+    muiTheme: PropTypes.object.isRequired
+};
 
 export default Root;

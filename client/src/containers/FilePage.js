@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
-import Paper from 'material-ui/lib/paper';
-import GridList from 'material-ui/lib/grid-list/grid-list';
+import Paper from 'material-ui/Paper';
+import GridList from 'material-ui/GridList';
 import { FilePreview } from '../components/layout';
 import { connect } from 'react-redux';
 import { routeActions } from 'react-router-redux';
 import { clear, getNextUnboxed, setGeoHash } from '../actions/list';
-import CircularProgress from 'material-ui/lib/circular-progress';
+import CircularProgress from 'material-ui/CircularProgress';
 import { findDOMNode } from 'react-dom';
 
 /* eslint-disable */

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { GoogleMap, Marker } from 'react-google-maps';
 import ScriptjsLoader from 'react-google-maps/lib/async/ScriptjsLoader';
-import CircularProgress from 'material-ui/lib/circular-progress';
+import CircularProgress from 'material-ui/CircularProgress';
 
 const MapLoader = (props) => {
     const { children } = props;

@@ -6,8 +6,9 @@ import { connect } from 'react-redux';
 import { centerChange } from '../actions/map';
 import { goToList } from '../actions/list';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import Snackbar from 'material-ui/lib/snackbar';
+import Snackbar from 'material-ui/Snackbar';
 import { hide } from '../actions/upload';
+import Drawer from 'material-ui/Drawer';
 
 const pageSettings = {
     appBarHeight: '64px'
@@ -76,6 +77,12 @@ class MainPage extends Component {
                         })}
                     </ReactCSSTransitionGroup>
                 </LowerContainer>
+                {/*<Drawer
+                    docked={false}
+                    width={200}
+                    open={this.state.open}
+                    onRequestChange={open => this.setState({open})}>
+                </Drawer>*/}
                 <Snackbar
                     open={isOpen}
                     message="File(s) uploaded successfully"

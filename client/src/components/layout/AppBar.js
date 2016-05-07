@@ -1,5 +1,5 @@
 import React from 'react';
-import AppBarMUI from 'material-ui/lib/app-bar';
+import AppBarMUI from 'material-ui/AppBar';
 
 export const AppBar = (props) => {
     const { title } = props;

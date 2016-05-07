@@ -4,6 +4,7 @@ import token from './token';
 import map from './map';
 import list from './list';
 import upload from './upload';
+import layout from './layout';
 import { reducer as formReducer } from 'redux-form';
 
 export default combineReducers({
@@ -12,5 +13,6 @@ export default combineReducers({
     token,
     map,
     list,
-    upload
+    upload,
+    layout
 });

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import GridTile from 'material-ui/lib/grid-list/grid-tile';
-import FileDownload from 'material-ui/lib/svg-icons/file/file-download';
-import IconButton from 'material-ui/lib/icon-button';
+import { GridTile } from 'material-ui/GridList';
+import FileDownload from 'material-ui/svg-icons/file/file-download';
+import IconButton from 'material-ui/IconButton';
 import { getFileUrl } from '../../utils/api';
 import moment from 'moment';
 import pureRender from '../../utils/pureRender';

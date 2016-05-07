@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import IconMenu from 'material-ui/lib/menus/icon-menu';
-import MenuItem from 'material-ui/lib/menus/menu-item';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
 import FloatingButton from './FloatingButton';
-import Map from 'material-ui/lib/svg-icons/maps/map';
-import Place from 'material-ui/lib/svg-icons/maps/place';
+import Map from 'material-ui/svg-icons/maps/map';
+import Place from 'material-ui/svg-icons/maps/place';
 import { fileOpen } from '../../utils/files';
 import { connect } from 'react-redux';
 import { uploadFile, uploadTrack, hide } from '../../actions/upload';

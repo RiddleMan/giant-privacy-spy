@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import FloatingActionButton from 'material-ui/lib/floating-action-button';
-import Add from 'material-ui/lib/svg-icons/content/add';
-import CircularProgress from 'material-ui/lib/circular-progress';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Add from 'material-ui/svg-icons/content/add';
+import CircularProgress from 'material-ui/CircularProgress';
 
 export default class FloatingButton extends Component {
     render() {
