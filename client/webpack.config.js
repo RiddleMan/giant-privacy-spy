@@ -53,7 +53,7 @@ export default {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             __DEV__: true,
-            __DEVTOOLS__: false,
+            __DEVTOOLS__: true,
             __API_URL__: `\'${API_URL}\'`
         }),
         new webpack.ProvidePlugin({

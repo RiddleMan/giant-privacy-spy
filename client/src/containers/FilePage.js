@@ -5,6 +5,7 @@ import { routeActions } from 'react-router-redux';
 import CircularProgress from 'material-ui/CircularProgress';
 import { findDOMNode } from 'react-dom';
 import { getFile } from '../actions/file';
+import { getFileUrl } from '../utils/api';
 
 import { List, ListItem } from 'material-ui/List';
 import ContentInbox from 'material-ui/svg-icons/content/inbox';
@@ -54,6 +55,13 @@ class FileInfo extends Component {
 
 class ImagePreview extends Component {
     render() {
+        const { file, isFetching } = this.props;
+
+        let url;
+
+        if(file.thumbnails)
+            url = getFileUrl(file.thumbnails[1920]);
+
         return (
             <Paper
                 style={{
@@ -76,7 +84,7 @@ class ImagePreview extends Component {
                         media="(-webkit-min-device-pixel-ratio: 1.5),(min-resolution: 144dpi)" />*/}
                     <img
                         className='fit'
-                        src="http://lorempixel.com/1920/1080/nature/" />
+                        src={url} />
                 </picture>
             </Paper>
         );
@@ -85,15 +93,24 @@ class ImagePreview extends Component {
 
 class CarouselControls extends Component {
     render() {
-        const { onLeftTouchTap, onRightTouchTap } = this.props;
+        const {
+            onLeftTouchTap,
+            onRightTouchTap,
+            rightDisabled,
+            leftDisabled
+        } = this.props;
 
         return (
             <div className='file-preview__controls'>
                 <div className='file-preview__controls-container'>
-                    <IconButton>
+                    <IconButton
+                        disabled={leftDisabled}
+                        onTouchTap={onLeftTouchTap}>
                         <LeftArrow />
                     </IconButton>
-                    <IconButton>
+                    <IconButton
+                        disabled={rightDisabled}
+                        onTouchTap={onRightTouchTap}>
                         <RightArrow />
                     </IconButton>
                 </div>
@@ -104,12 +121,22 @@ class CarouselControls extends Component {
 
 class Carousel extends Component {
     render() {
+        const { file: {
+            prev, next
+        }, onPrev, onNext, isFetching } = this.props;
+        const file = this.props.file;
+
         return (
             <div className='file-preview'>
                 <div className='file-preview__content'>
-                    <ImagePreview />
+                    <ImagePreview
+                        file={file} />
                 </div>
-                <CarouselControls/>
+                <CarouselControls
+                    rightDisabled={!next || isFetching}
+                    leftDisabled={!prev || isFetching}
+                    onLeftTouchTap={onPrev}
+                    onRightTouchTap={onNext}/>
             </div>
         );
     }
@@ -120,6 +147,24 @@ class FilePage extends Component {
         super(props);
 
         this.state = {};
+        this.onPrev = this.onPrev.bind(this);
+        this.onNext = this.onNext.bind(this);
+    }
+
+    onPrev() {
+        const { content: {
+            prev
+        }, goToFile } = this.props;
+
+        goToFile(prev);
+    }
+
+    onNext() {
+        const { content: {
+            next
+        }, goToFile } = this.props;
+
+        goToFile(next);
     }
 
     getNewFile(props) {
@@ -144,12 +189,22 @@ class FilePage extends Component {
 
         return (
             <Paper className='file-page__overlay'>
-                <Carousel file={content}/>
+                <Carousel
+                    isFetching={isFetching}
+                    onNext={this.onNext}
+                    onPrev={this.onPrev}
+                    file={content}/>
                 <FileInfo
                     file={content} />
             </Paper>);
     }
 }
+
+const noop = () => {};
+
+FilePage.defaultProps = {
+    content: {}
+};
 
 const mapStateToProps = (state) => {
     const { file } = state;
@@ -160,5 +215,6 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-    getFile
+    getFile,
+    goToFile: (id) => routeActions.push(`/file/${id}`)
 })(FilePage);
