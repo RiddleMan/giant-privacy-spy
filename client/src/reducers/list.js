@@ -4,7 +4,6 @@ const initialState = {
     isFetching: false,
     files: [],
     isError: false,
-    box: 'a',
     sort: '-_createDate',
     page: 1,
     pageSize: 10

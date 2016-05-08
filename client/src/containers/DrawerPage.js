@@ -2,15 +2,16 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { toggleLeftNav } from '../actions/layout';
 import { logout } from '../actions/token';
+import { clear as clearFilters } from '../actions/list';
+import { routeActions } from 'react-router-redux';
 import Drawer from 'material-ui/Drawer';
 
 import { List, ListItem } from 'material-ui/List';
-import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import Map from 'material-ui/svg-icons/maps/map';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
 import ContentSend from 'material-ui/svg-icons/content/send';
 import ContentDrafts from 'material-ui/svg-icons/content/drafts';
 import Divider from 'material-ui/Divider';
-import ActionInfo from 'material-ui/svg-icons/action/info';
 import ExitToApp from 'material-ui/svg-icons/action/exit-to-app';
 import UserInfoCard from './UserInfoCard';
 
@@ -32,7 +33,7 @@ class DrawerPage extends Component {
     }
 
     render() {
-        const { open } = this.props;
+        const { open, goToMap, clearFilters } = this.props;
 
         return (
             <Drawer
@@ -41,13 +42,20 @@ class DrawerPage extends Component {
                 open={open}
                 onRequestChange={this.onDrawerClose}>
                 <UserInfoCard />
-                <List>
-                  <ListItem primaryText="Inbox" leftIcon={<ContentInbox />} />
-                  <ListItem primaryText="Starred" leftIcon={<ActionGrade />} />
-                  <ListItem primaryText="Sent mail" leftIcon={<ContentSend />} />
-                  <ListItem primaryText="Drafts" leftIcon={<ContentDrafts />} />
-                  <ListItem primaryText="Inbox" leftIcon={<ContentInbox />} />
-                </List>
+                    <List>
+                        <ListItem
+                            onTouchTap={() => {
+                                goToMap();
+                                clearFilters();
+                                this.onDrawerClose();
+                            }}
+                            primaryText="Map"
+                            leftIcon={<Map />} />
+                        <ListItem primaryText="Starred" leftIcon={<ActionGrade />} />
+                        <ListItem primaryText="Sent mail" leftIcon={<ContentSend />} />
+                        <ListItem primaryText="Drafts" leftIcon={<ContentDrafts />} />
+                        <ListItem primaryText="Inbox" leftIcon={<ActionGrade />} />
+                    </List>
                 <Divider />
                 <List>
                   <ListItem
@@ -80,5 +88,7 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
     toggleLeftNav,
+    goToMap: () => routeActions.push('/'),
+    clearFilters,
     logout
 })(DrawerPage);

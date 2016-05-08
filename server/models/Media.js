@@ -18,7 +18,6 @@ const tmp = require('tmp');
 const im = require('imagemagick');
 const path = require('path');
 
-
 const getGrid = () => {
     Grid.mongo = mongoose.mongo;
     return Grid(connection.db);
@@ -66,7 +65,6 @@ if(!MediaSchema.options.toJSON)
     };
 
 MediaSchema.options.toJSON.transform = function(doc, ret) {
-    delete ret._id;
     delete ret._user;
     delete ret.__v;
     delete ret.id;
@@ -99,7 +97,7 @@ MediaSchema.virtual('createDate')
         this._craeteDate = this._id.getTimestamp();
     });
 
-MediaSchema.statics.getFile = (id, cb) => {
+MediaSchema.statics.getStaticFile = (id, cb) => {
     const _cb = cb || function() {};
     const gfs = getGrid();
     const query = {
@@ -201,6 +199,92 @@ MediaSchema.statics.boxFiles = function(predicate, cb) {
             count: { $sum: 1 }
         })
         .exec(cb);
+};
+
+MediaSchema.statics.getFile = function(predicate, cb) {
+    const _predicate = Object.assign({
+        sort: '-_createDate'
+    }, predicate);
+
+    const match = {
+        _id: new mongoose.Types.ObjectId(predicate.id)
+    };
+
+    if(predicate.box)
+        match._geoHash = new RegExp(`^${_predicate.box}`);
+
+    if(_predicate.after || _predicate.before)
+        match._createDate = {};
+
+    if(_predicate.before)
+        match._createDate.$lt = new Date(_predicate.before);
+
+    if(_predicate.after)
+        match._createDate.$gte = new Date(_predicate.after);
+
+    if(_predicate.extensions)
+        match.name = {
+            $in: _predicate.extensions
+                .map((ext) => new RegExp(`\\${ext}$`))
+        };
+
+    let currFile;
+
+    const getLinkedFiles = (file, cb) => {
+        currFile = file[0];
+
+        if(!currFile)
+            return cb();
+
+        const sortPropName = predicate.sort.replace(/^-/, '');
+        delete match._id;
+        const prevMatch = Object.assign({}, match, {
+            [sortPropName]: {
+                $lt: currFile[sortPropName]
+            }
+        });
+
+        const nextMatch = Object.assign({}, match, {
+            [sortPropName]: {
+                $gt: currFile[sortPropName]
+            }
+        });
+
+        parallel([
+            (cb) => this.find(prevMatch)
+                .limit(1)
+                .sort(_predicate.sort)
+                .populate('_id')
+                .exec(cb),
+            (cb) => this.find(nextMatch)
+                .limit(1)
+                .sort(_predicate.sort)
+                .populate('_id')
+                .exec(cb)
+        ], cb);
+    };
+
+    waterfall([
+        (cb) => this.find(match)
+            .limit(1)
+            .sort(_predicate.sort)
+            .exec(cb),
+        getLinkedFiles
+    ], (err, linkedFiles) => {
+        if(err)
+            return cb(err);
+
+        if(!currFile)
+            return cb(null, currFile);
+
+        const prevFile = linkedFiles[0][0];
+        const nextFile = linkedFiles[1][0];
+
+        cb(null, Object.assign(currFile.toJSON(), {
+            prev: prevFile && prevFile.id,
+            next: nextFile && nextFile.id
+        }));
+    });
 };
 
 MediaSchema.statics.unboxFiles = function(predicate, cb) {

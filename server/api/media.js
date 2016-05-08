@@ -40,14 +40,23 @@ api.get('/', isLogged, (req, res) => {
 });
 
 api.get('/:id', isLogged, (req, res) => {
-    Media.findById(req.params.id, (err, media) => {
+    Media.getFile({
+        id: req.params.id,
+
+        //TODO: search: 'hakunamatata'
+        box: req.query.box,
+        after: req.query.after,
+        before: req.query.before,
+        extensions: req.query.extensions,
+        sort: req.query.sort
+    }, (err, media) => {
         if(err)
             return res.sendStatus(500);
 
         if(!media)
             return res.sendStatus(404);
 
-        res.json(media.toJSON());
+        res.json(media);
     });
 });
 
@@ -80,7 +89,7 @@ api.post('/', isLogged, (req, res) => {
 });
 
 api.get('/static/:id', (req, res) => {
-    Media.getFile(req.params.id, (err, file) => {
+    Media.getStaticFile(req.params.id, (err, file) => {
         if(err && err.code === 'ENOENT')
             return res.sendStatus(404);
 

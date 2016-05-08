@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { App, MainPage, LoginPage, FileListPage, FilePage } from './containers';
-import { Router, Route, browserHistory } from 'react-router';
+import { Router, Route, hashHistory } from 'react-router';
 
 class Routes extends Component {
     constructor(props) {
@@ -22,7 +22,7 @@ class Routes extends Component {
 
     render() {
         return (
-            <Router history={browserHistory}>
+            <Router history={hashHistory}>
                 <Route component={ App }>
                     <Route path="/login" component={ LoginPage } />
                     <Route path="/" component={ MainPage } onEnter={this.isAuthorized}>

@@ -72,7 +72,7 @@ class MainPage extends Component {
                         onCenterChange={centerChange}
                         boxes={boxes} />
                     <AddMenu />
-                    <ReactCSSTransitionGroup
+                    {/*<ReactCSSTransitionGroup
                         component="div"
                         transitionName="slide"
                         transitionEnterTimeout={500}
@@ -83,7 +83,8 @@ class MainPage extends Component {
                         {cloneElement(children || <div />, {
                             key: location.pathname
                         })}
-                    </ReactCSSTransitionGroup>
+                    </ReactCSSTransitionGroup>*/}
+                    {children}
                 </LowerContainer>
                 <DrawerPage />
                 <Snackbar

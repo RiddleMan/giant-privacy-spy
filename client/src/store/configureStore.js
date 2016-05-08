@@ -1,11 +1,11 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { syncHistory } from 'react-router-redux';
-import { browserHistory } from 'react-router';
+import { hashHistory } from 'react-router';
 import persistState from 'redux-localstorage';
 import rootReducer from '../reducers';
 
-const reduxRouterMiddleware = syncHistory(browserHistory);
+const reduxRouterMiddleware = syncHistory(hashHistory);
 
 let middlewareArray = [
     reduxRouterMiddleware,

@@ -1,115 +1,164 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
-import GridList from 'material-ui/GridList';
-import { FilePreview } from '../components/layout';
 import { connect } from 'react-redux';
 import { routeActions } from 'react-router-redux';
-import { clear, getNextUnboxed, setGeoHash } from '../actions/list';
 import CircularProgress from 'material-ui/CircularProgress';
 import { findDOMNode } from 'react-dom';
+import { getFile } from '../actions/file';
 
-/* eslint-disable */
-const styles = {
-  gridList: {
-    width: '100%',
-    height: '100%',
-    overflowY: 'scroll'
-  },
-};
-/* eslint-enable */
+import { List, ListItem } from 'material-ui/List';
+import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import ActionGrade from 'material-ui/svg-icons/action/grade';
+import ContentSend from 'material-ui/svg-icons/content/send';
+import ContentDrafts from 'material-ui/svg-icons/content/drafts';
+import Divider from 'material-ui/Divider';
+import ExitToApp from 'material-ui/svg-icons/action/exit-to-app';
+import UserInfoCard from './UserInfoCard';
+
+import IconButton from 'material-ui/IconButton';
+import LeftArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
+import RightArrow from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
+
+class FileInfo extends Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        const { file } = this.props;
+
+        return (
+            <Paper
+                zDepth={4}
+                className="file-info">
+                {/*Temporary*/}
+                <UserInfoCard />
+                <List>
+                  <ListItem primaryText="Inbox" leftIcon={<ContentInbox />} />
+                  <ListItem primaryText="Starred" leftIcon={<ActionGrade />} />
+                  <ListItem primaryText="Sent mail" leftIcon={<ContentSend />} />
+                  <ListItem primaryText="Drafts" leftIcon={<ContentDrafts />} />
+                  <ListItem primaryText="Inbox" leftIcon={<ContentInbox />} />
+                </List>
+                <Divider />
+                <List>
+                  <ListItem
+                    onTouchTap={this.onLogout}
+                    primaryText="Logout"
+                    rightIcon={<ExitToApp />} />
+                </List>
+            </Paper>
+        );
+    }
+}
+
+class ImagePreview extends Component {
+    render() {
+        return (
+            <Paper
+                style={{
+                    maxWidth: 'calc(100% - 40px)',
+                    margin: '0 auto'
+                }}
+                zDepth={2}>
+                <picture>
+                    {/*<source
+                        alt={name}
+                        srcSet={getFileUrl(thumbnails['500'])}
+                        media="(-webkit-min-device-pixel-ratio: 1.25),(min-resolution: 120dpi)" />
+                    <source
+                        alt={name}
+                        srcSet={getFileUrl(thumbnails['500'])}
+                        media="(-webkit-min-device-pixel-ratio: 1.3),(min-resolution: 124.8dpi)" />
+                    <source
+                        alt={name}
+                        srcSet={getFileUrl(thumbnails['800'])}
+                        media="(-webkit-min-device-pixel-ratio: 1.5),(min-resolution: 144dpi)" />*/}
+                    <img
+                        className='fit'
+                        src="http://lorempixel.com/1920/1080/nature/" />
+                </picture>
+            </Paper>
+        );
+    }
+}
+
+class CarouselControls extends Component {
+    render() {
+        const { onLeftTouchTap, onRightTouchTap } = this.props;
+
+        return (
+            <div className='file-preview__controls'>
+                <div className='file-preview__controls-container'>
+                    <IconButton>
+                        <LeftArrow />
+                    </IconButton>
+                    <IconButton>
+                        <RightArrow />
+                    </IconButton>
+                </div>
+            </div>
+        );
+    }
+}
+
+class Carousel extends Component {
+    render() {
+        return (
+            <div className='file-preview'>
+                <div className='file-preview__content'>
+                    <ImagePreview />
+                </div>
+                <CarouselControls/>
+            </div>
+        );
+    }
+}
 
 class FilePage extends Component {
     constructor(props) {
         super(props);
 
-        this.onResize = this.onResize.bind(this);
-        this.onScroll = this.onScroll.bind(this);
-        this.state = {
-            columnsCount: this.noOfColumns
-        };
+        this.state = {};
     }
 
-    onScroll(e) {
-        const { getNextUnboxed } = this.props;
+    getNewFile(props) {
+        const { params: {
+            id
+        }, getFile } = props;
 
-        if(this.scroller.scrollTop + this.scroller.offsetHeight >= this.scroller.scrollHeight - 50)
-            getNextUnboxed();
-    }
-
-    onResize() {
-        if(this.state.columnsCount !== this.noOfColumns)
-            this.setState({
-                columnsCount: this.noOfColumns
-            });
-    }
-
-    get noOfColumns() {
-        if(window.matchMedia('(min-width: 1200px)').matches)
-            return 5;
-
-        if(window.matchMedia('(min-width: 768px)').matches)
-            return 4;
-
-        if(window.matchMedia('(min-width: 480px)').matches)
-            return 3;
-
-        return 2;
+        getFile(id);
     }
 
     componentDidMount() {
-        const { setGeoHash, params: { id }, getNextUnboxed } = this.props;
-        setGeoHash(id);
-        getNextUnboxed();
-        window.addEventListener('resize', this.onResize);
-        this.scroller.addEventListener('wheel', this.onScroll);
+        this.getNewFile(this.props);
     }
 
     componentWillUpdate(nextProps) {
-        if(nextProps.params.id !== this.props.params.id) {
-            const { setGeoHash, clear } = this.props;
-            const { params: { id } } = nextProps;
-
-            clear();
-            setGeoHash(id);
-        }
-    }
-
-    componentWillUnmount() {
-        const { clear } = this.props;
-        clear();
-        window.removeEventListener('resize', this.onResize);
-        this.scroller.removeEventListener('wheel', this.onScroll);
+        if(nextProps.params.id !== this.props.params.id)
+            this.getNewFile(nextProps);
     }
 
     render() {
-        const { list } = this.props;
-        const { isFetching } = list;
-        const { columnsCount } = this.state;
+        const { content, isFetching } = this.props;
 
         return (
-            <Paper className='mainPage__overlay'>
-                <GridList
-                    ref={(r) => this.scroller = findDOMNode(r)}
-                    cols={columnsCount}
-                    cellHeight={200}
-                    style={styles.gridList}>
-                    {list.files.map(file =>
-                        <FilePreview key={file.fileId} {...file}/>)}
-                </GridList>
+            <Paper className='file-page__overlay'>
+                <Carousel file={content}/>
+                <FileInfo
+                    file={content} />
             </Paper>);
     }
 }
 
 const mapStateToProps = (state) => {
-    const { list } = state;
+    const { file } = state;
+
     return {
-        list
+        ...file
     };
 };
 
 export default connect(mapStateToProps, {
-    setGeoHash,
-    getNextUnboxed,
-    clear,
-    goToFile: () => routeActions.push()
+    getFile
 })(FilePage);

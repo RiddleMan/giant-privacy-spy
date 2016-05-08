@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "eslint": "^2.2.0",
-    "node-inspector": "^0.12.6"
+    "node-inspector": "^0.12.6",
+    "nodemon": "^1.9.2"
   }
 }

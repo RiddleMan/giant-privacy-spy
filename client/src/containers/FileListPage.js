@@ -26,9 +26,14 @@ class FileListPage extends Component {
         this.state = {
             columnsCount: this.noOfColumns
         };
+        this.onFileSelect = this.onFileSelect.bind(this);
     }
 
-    onScroll(e) {
+    onFileSelect(file) {
+        this.props.goToFile(file._id);
+    }
+
+    onScroll() {
         const { getNextUnboxed } = this.props;
 
         if(this.scroller.scrollTop + this.scroller.offsetHeight >= this.scroller.scrollHeight - 50)
@@ -93,7 +98,10 @@ class FileListPage extends Component {
                     cellHeight={200}
                     style={styles.gridList}>
                     {list.files.map(file =>
-                        <FilePreview key={file.fileId} {...file}/>)}
+                        <FilePreview
+                            onSelect={this.onFileSelect.bind(null, file)}
+                            key={file.fileId}
+                            {...file}/>)}
                 </GridList>
             </Paper>);
     }
@@ -110,5 +118,5 @@ export default connect(mapStateToProps, {
     setGeoHash,
     getNextUnboxed,
     clear,
-    goToFile: () => routeActions.push()
+    goToFile: (fileId) => routeActions.push(`/file/${fileId}`)
 })(FileListPage);

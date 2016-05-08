@@ -60,12 +60,8 @@ export const getFiles = ({
     size,
     filter = {}
 }) => {
-    const _filter = {
-        ...filter
-    };
-
     const params = param({
-        ..._filter,
+        ...filter,
         box,
         page,
         sort,
@@ -115,6 +111,24 @@ export const login = ({
             user,
             password
         })
+    }));
+};
+
+export const getFile = ({
+    token,
+    id,
+    box,
+    sort = '-_createDate',
+    filter = {}
+}) => {
+    const params = param({
+        ...filter,
+        box,
+        sort
+    });
+
+    return fetch(`${GET_UNBOXED}/${id}?${params}`, getAuthorizedRequest({
+        token
     }));
 };
 
