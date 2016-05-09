@@ -22,3 +22,22 @@ export const fileOpen = (function() {
         });
     };
 }());
+
+export const getImageSize = (src) => {
+    const imageEl = document.createElement('img');
+
+    return new Promise((resolve, reject) => {
+        imageEl.onerror = () => {
+            reject();
+        };
+
+        imageEl.onload = () => {
+            resolve({
+                width: imageEl.width,
+                height: imageEl.height
+            });
+        };
+
+        imageEl.setAttribute('src', src);
+    });
+};
