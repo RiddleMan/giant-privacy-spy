@@ -238,27 +238,49 @@ MediaSchema.statics.getFile = function(predicate, cb) {
 
         const sortPropName = predicate.sort.replace(/^-/, '');
         delete match._id;
-        const prevMatch = Object.assign({}, match, {
-            [sortPropName]: {
-                $lt: currFile[sortPropName]
-            }
-        });
 
-        const nextMatch = Object.assign({}, match, {
-            [sortPropName]: {
-                $gt: currFile[sortPropName]
-            }
-        });
+        const prevMatch = {
+            $or: [
+                Object.assign({}, match, {
+                    [sortPropName]: {
+                        $lt: currFile[sortPropName]
+                    }
+                }),
+                Object.assign({}, match, {
+                    _id: {
+                        $lt: currFile._id
+                    }
+                })
+            ]
+        };
+
+        const nextMatch = {
+            $or: [
+                Object.assign({}, match, {
+                    [sortPropName]: {
+                        $gt: currFile[sortPropName]
+                    }
+                }),
+                Object.assign({}, match, {
+                    _id: {
+                        $gt: currFile._id
+                    }
+                })
+            ]
+        };
+
+        const nextSort = _predicate.sort.indexOf('-') === 0 ?
+            _predicate.sort.replace(/^-/, '') : '-' + _predicate.sort;
 
         parallel([
             (cb) => this.find(prevMatch)
                 .limit(1)
-                .sort(_predicate.sort)
+                .sort(nextSort + ' _id')
                 .populate('_id')
                 .exec(cb),
             (cb) => this.find(nextMatch)
                 .limit(1)
-                .sort(_predicate.sort)
+                .sort(_predicate.sort + ' -_id')
                 .populate('_id')
                 .exec(cb)
         ], cb);
@@ -267,7 +289,7 @@ MediaSchema.statics.getFile = function(predicate, cb) {
     waterfall([
         (cb) => this.find(match)
             .limit(1)
-            .sort(_predicate.sort)
+            .sort(_predicate.sort + ' -_id')
             .exec(cb),
         getLinkedFiles
     ], (err, linkedFiles) => {
@@ -285,6 +307,22 @@ MediaSchema.statics.getFile = function(predicate, cb) {
             next: nextFile && nextFile.id
         }));
     });
+};
+
+MediaSchema.statics.updateFile = function(id, update, cb) {
+    const _update = Object.assign({}, update);
+
+    if('_loc' in update) {
+        _update._loc = {
+            type: 'Point',
+            coordinates: update._loc
+        };
+        _update._geoHash = geohash.encode(update._loc[1], update._loc[0], 11);
+    }
+
+    this.model('Media').update({
+        _id: new mongoose.Types.ObjectId(id)
+    }, _update, cb);
 };
 
 MediaSchema.statics.unboxFiles = function(predicate, cb) {
@@ -318,7 +356,7 @@ MediaSchema.statics.unboxFiles = function(predicate, cb) {
     this.find(match)
         .skip(skip)
         .limit(_predicate.size)
-        .sort(_predicate.sort)
+        .sort(_predicate.sort + ' -_id')
         .exec(cb);
 };
 

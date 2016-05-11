@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Paper from 'material-ui/Paper';
 import { GridList } from 'material-ui/GridList';
-import { FilePreview } from '../components/layout';
+import { GridFilePreview } from '../components/layout';
 import { connect } from 'react-redux';
 import { routeActions } from 'react-router-redux';
 import { clear, getNextUnboxed, setGeoHash } from '../actions/list';
@@ -98,7 +98,7 @@ class FileListPage extends Component {
                     cellHeight={200}
                     style={styles.gridList}>
                     {list.files.map(file =>
-                        <FilePreview
+                        <GridFilePreview
                             onSelect={this.onFileSelect.bind(null, file)}
                             key={file.fileId}
                             {...file}/>)}

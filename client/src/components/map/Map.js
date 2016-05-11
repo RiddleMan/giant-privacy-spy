@@ -3,10 +3,15 @@ import { GoogleMap, Marker } from 'react-google-maps';
 import ScriptjsLoader from 'react-google-maps/lib/async/ScriptjsLoader';
 import CircularProgress from 'material-ui/CircularProgress';
 
-const MapLoader = (props) => {
-    const { children } = props;
+export const MapLoader = (props) => {
+    const { children, style } = props;
 
-    return (<section style={{height: '100%'}}>
+    const sectionStyle = {
+        height: '100%',
+        ...style
+    };
+
+    return (<section style={sectionStyle}>
         <ScriptjsLoader
             hostname={"maps.googleapis.com"}
             pathname={"/maps/api/js"}

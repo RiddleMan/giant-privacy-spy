@@ -132,6 +132,21 @@ export const getFile = ({
     }));
 };
 
+export const updateFile = ({
+    token,
+    _id,
+    update
+}) => {
+    return fetch(GET_UNBOXED, getAuthorizedRequest({
+        method: 'PUT',
+        body: JSON.stringify({
+            _id,
+            ...update
+        }),
+        token
+    }));
+};
+
 export const getFileUrl = (fileId) => `${GET_FILE_STATIC}${fileId}`;
 
 export const getUserInfo = (token) => {

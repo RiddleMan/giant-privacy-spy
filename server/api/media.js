@@ -2,6 +2,8 @@ const api = require('../utils').api('/media');
 const isLogged = require('../auth').isLogged;
 const Busboy = require('busboy');
 const Media = require('../models/Media');
+const mongoose = require('mongoose');
+const _ = require('lodash');
 
 api.get('/boxes', isLogged, (req, res) => {
     Media.boxFiles({
@@ -104,7 +106,18 @@ api.get('/static/:id', (req, res) => {
 });
 
 api.put('/', isLogged, (req, res) => {
-    //TODO: Create update of coordinates + filename etc.
+    const id = req.body._id;
+
+    if(!id)
+        res.sendStatus(400);
+
+    Media.updateFile(id, _.omit(req.body, ['_id']), (err) => {
+        console.dir(err);
+        if(err)
+            return res.sendStatus(500);
+
+        res.sendStatus(200);
+    });
 });
 
 api.delete('/:id', isLogged, (req, res) => {
