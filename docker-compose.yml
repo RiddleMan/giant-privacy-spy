@@ -1,0 +1,20 @@
+version: '2'
+services:
+  gps-client:
+    build: ./client
+    ports:
+     - "3000:3000"
+    volumes:
+     - ./client:/usr/src/app
+    depends_on:
+     - gps-server
+  gps-server:
+    build: ./server
+    ports:
+     - "3001:3001"
+    volumes:
+     - ./server:/usr/src/app
+    depends_on:
+     - mongo
+  mongo:
+    image: mongo
