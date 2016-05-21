@@ -1,17 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import Paper from 'material-ui/Paper';
 import { GridList } from 'material-ui/GridList';
-import { GridFilePreview } from '../components/layout';
+import { GridFilePreview, GridListToolbar } from '../components/layout';
 import { connect } from 'react-redux';
 import { routeActions } from 'react-router-redux';
 import { clear, getNextUnboxed, setGeoHash } from '../actions/list';
 import { findDOMNode } from 'react-dom';
 
+
 /* eslint-disable */
 const styles = {
   gridList: {
-    width: '100%',
-    height: '100%',
     overflowY: 'scroll'
   },
 };
@@ -92,6 +91,7 @@ class FileListPage extends Component {
 
         return (
             <Paper className='mainPage__overlay'>
+                <GridListToolbar />
                 <GridList
                     ref={(r) => this.scroller = findDOMNode(r)}
                     cols={columnsCount}

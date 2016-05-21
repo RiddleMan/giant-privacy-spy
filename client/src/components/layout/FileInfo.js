@@ -4,6 +4,7 @@ import { List, ListItem } from 'material-ui/List';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import ActionWatchLater from 'material-ui/svg-icons/action/watch-later';
 import Image from 'material-ui/svg-icons/image/image';
+import DatePicker from 'material-ui/DatePicker';
 import Paper from 'material-ui/Paper';
 import { MapLoader } from '../map';
 import { GoogleMap, Marker } from 'react-google-maps';
@@ -52,12 +53,52 @@ class FileInfo extends Component {
         super(props);
 
         this.onPositionChange = this.onPositionChange.bind(this);
+        this.onNameChange = this.onNameChange.bind(this);
+        this.onDateChange = this.onDateChange.bind(this);
     }
 
     onPositionChange(loc) {
         this.props.onChange({
             _loc: loc
         });
+    }
+
+    onNameChange(e) {
+        this.props.onChange({
+            name: e.target.innerText
+        });
+    }
+
+    onDateChange(x, date) {
+        this.props.onChange({
+            _createDate: date.toISOString()
+        });
+    }
+
+    renderName() {
+        const { file } = this.props;
+
+        return (
+            <div
+                contentEditable
+                onBlur={this.onNameChange}
+                dangerouslySetInnerHTML={{__html: file.name}} />
+        );
+    }
+
+    renderDate() {
+        const { file } = this.props;
+
+        return (
+            <DatePicker
+                style={{
+                    height: '40px'
+                }}
+                id="fileInfo-datePicker"
+                onChange={this.onDateChange}
+                value={new Date(file._createDate)}
+                container="inline" />
+        );
     }
 
     render() {
@@ -77,12 +118,12 @@ class FileInfo extends Component {
                     <ListItem
                         leftIcon={<Image />}
                         primaryText="Name"
-                        secondaryText={file.name}
+                        secondaryText={this.renderName()}
                     />
                     <ListItem
                         leftIcon={<ActionWatchLater />}
                         primaryText="Created"
-                        secondaryText={moment(file._createDate).format('LLL')} />
+                        secondaryText={this.renderDate()} />
                     <ListItem
                         leftIcon={<ActionInfo />}
                         primaryText="Details"

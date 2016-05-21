@@ -1,6 +1,10 @@
 import {
     FILE_RESPONSE,
     FILE_REQUEST,
+
+    FILE_PROP_REQUEST,
+    FILE_PROP_RESPONSE,
+
     CLEAR
 } from '../constants/file';
 
@@ -18,6 +22,15 @@ export default (state = initialState, action) => {
         return {
             ...state,
             isFetching: true
+        };
+
+    case FILE_PROP_REQUEST:
+        return {
+            ...state,
+            content: {
+                ...state.content,
+                ...action.update
+            }
         };
     case CLEAR:
         return initialState;

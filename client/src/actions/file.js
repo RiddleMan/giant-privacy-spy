@@ -9,8 +9,9 @@ import {
     CLEAR
 } from '../constants/file';
 
-const requestProp = () => ({
-    type: FILE_PROP_REQUEST
+const requestProp = (update) => ({
+    type: FILE_PROP_REQUEST,
+    update
 });
 
 const responseProp = () => ({
@@ -25,7 +26,7 @@ export const filePropChange = (update) =>
 
         const { _id } = content;
 
-        dispatch(requestProp());
+        dispatch(requestProp(update));
         updateFile({
             token,
             _id,
