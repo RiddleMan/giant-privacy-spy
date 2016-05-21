@@ -1,9 +1,9 @@
 module.exports = {
     auth: {
-        secret: 'HKEtwMm39pGWwJUFPkVjcLxNcurYaNGxx)rWuDkmTLKpyGJFAE',
+        secret: 'HKEtwMm39pGWwJUFPkVjcLxNcurYaNGxx)rWuDkmTLKpyGJFAE'
     },
     mongo: {
-        url: 'localhost:9200',
-        autoIndex: false
+        conn: 'mongodb://giantprivacyspy_mongo_1/giant-privacy-spy',
+        autoIndex: true
     }
 };

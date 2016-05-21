@@ -3,7 +3,7 @@ module.exports = {
         secret: 'secret'
     },
     mongo: {
-        conn: 'mongodb://giantprivacyspy_mongo_1/giant-privacy-spy' || 'mongodb://mongo/giant-privacy-spy',
+        conn: 'mongodb://localhost/giant-privacy-spy',
         autoIndex: true
     }
 };
