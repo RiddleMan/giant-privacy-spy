@@ -23,9 +23,6 @@ class FileListToolbar extends Component {
                 </ToolbarGroup>
 
                 <ToolbarGroup>
-                    <ToolbarTitle text="Options" />
-                    <FontIcon className="muidocs-icon-custom-sort" />
-                    <ToolbarSeparator />
                     <RaisedButton label="Create Broadcast" primary={true} />
                     <IconMenu
                         iconButtonElement={

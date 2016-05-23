@@ -26,7 +26,8 @@ export const filePropChange = (update) =>
 
         const { _id } = content;
 
-        dispatch(requestProp(update));
+        if(!('_loc' in update))
+            dispatch(requestProp(update));
         updateFile({
             token,
             _id,
