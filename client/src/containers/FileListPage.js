@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Paper from 'material-ui/Paper';
 import { GridList } from 'material-ui/GridList';
-import { GridFilePreview, GridListToolbar } from '../components/layout';
+import { GridFilePreview } from '../components/layout';
 import { connect } from 'react-redux';
 import { routeActions } from 'react-router-redux';
 import { clear, getNextUnboxed, setGeoHash } from '../actions/list';
@@ -91,7 +91,6 @@ class FileListPage extends Component {
 
         return (
             <Paper className='mainPage__overlay'>
-                <GridListToolbar />
                 <GridList
                     ref={(r) => this.scroller = findDOMNode(r)}
                     cols={columnsCount}

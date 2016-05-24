@@ -1,5 +1,6 @@
 import {
     CENTER_CHANGE,
+    FILTER_CHANGE,
     BOXES_REQUEST,
     BOXES_RESPONSE
 } from '../constants/map';
@@ -27,23 +28,34 @@ export const changeCenter = (coords) => {
     };
 };
 
+export const changeFilter = (filters) => {
+    return {
+        type: FILTER_CHANGE,
+        filters
+    };
+};
+
 const getBoxesDebounced = debounce(
     (dispatch, getState) => {
         const { map: {
-            bounds
+            filters
         }} = getState();
 
         dispatch(requestBoxes());
         getBoxes({
             token: getToken(getState()),
-            filter: {
-                startPos: [bounds.sw.lng, bounds.sw.lat],
-                endPos: [bounds.ne.lng, bounds.ne.lat]
-            }
+            filter: filters
         })
             .then((r) => r.json())
             .then((r) => dispatch(responseBoxes(r)));
     }, 500);
+
+export const filterChange = (filters) => {
+    return (dispatch, getState) => {
+        dispatch(changeFilter(filters));
+        getBoxesDebounced(dispatch, getState);
+    };
+};
 
 export const centerChange = (coords) => {
     return (dispatch, getState) => {

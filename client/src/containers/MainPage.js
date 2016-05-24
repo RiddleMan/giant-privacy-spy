@@ -1,5 +1,5 @@
 import React, { cloneElement, Component } from 'react';
-import { AppBar, AddMenu } from '../components/layout';
+import { AppBar, AddMenu, MainPageFilters } from '../components/layout';
 import { Map } from '../components/map';
 import { fitContainer } from '../utils/styles';
 import { connect } from 'react-redux';
@@ -20,7 +20,8 @@ const LowerContainer = (props) => {
 
     const styles = {
         position: 'relative',
-        height: `calc(100% - ${pageSettings.appBarHeight})`
+        height: `calc(100% - ${pageSettings.appBarHeight})`,
+        display: 'flex'
     };
 
     return (
@@ -71,6 +72,7 @@ class MainPage extends Component {
                         onMarkerClick={goToList}
                         onCenterChange={centerChange}
                         boxes={boxes} />
+                    <MainPageFilters />
                     <AddMenu />
                     {/*<ReactCSSTransitionGroup
                         component="div"

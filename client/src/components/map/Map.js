@@ -7,7 +7,7 @@ export const MapLoader = (props) => {
     const { children, style } = props;
 
     const sectionStyle = {
-        height: '100%',
+        flex: 1,
         ...style
     };
 

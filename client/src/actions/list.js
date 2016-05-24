@@ -14,7 +14,7 @@ export const goToList = ({
     center
 }) => {
     return (dispatch) => {
-        dispatch(changeCenter(center));
+        // dispatch(changeCenter(center)); TODO: add center mechanism later
         dispatch(routeActions.push(`list/${_id}`));
     };
 };
@@ -40,6 +40,7 @@ export const getNextUnboxed = () =>
     (dispatch, getState) => {
         const token = getToken(getState());
         const { box, page, isFetching, isEnd, pageSize } = getState().list;
+        const { filters } = getState().map;
 
         if(isFetching || isEnd)
             return;
@@ -49,7 +50,8 @@ export const getNextUnboxed = () =>
             token,
             page,
             box,
-            size: pageSize
+            size: pageSize,
+            filter: filters
         })
         .then((r) => r.json())
         .then((r) => dispatch(receiveUnbox(r)));

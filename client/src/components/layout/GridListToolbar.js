@@ -12,7 +12,6 @@ class FileListToolbar extends Component {
     render() {
         return (
             <Toolbar>
-
                 <ToolbarGroup firstChild={true}>
                     <TextField
                         style={{

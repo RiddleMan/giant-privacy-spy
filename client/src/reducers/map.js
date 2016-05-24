@@ -1,21 +1,19 @@
 import {
     CENTER_CHANGE,
     BOXES_REQUEST,
-    BOXES_RESPONSE
+    BOXES_RESPONSE,
+    FILTER_CHANGE
 } from '../constants/map';
 
 const initialState = {
     boxes: [],
+    filters: {
+        startPos: {},
+        endPos: {}
+    },
     center: {
         lat: 51.8335932,
         lng: 16.5334442
-    },
-    bounds: {
-        ne: {},
-        sw: {}
-    },
-    predicate: {
-
     }
 };
 
@@ -24,10 +22,19 @@ export default (state = initialState, action) => {
     case CENTER_CHANGE:
         return {
             ...state,
-            center: action.coords.center,
-            bounds: {
-                ne: action.coords.ne,
-                sw: action.coords.sw
+            filters: {
+                ...state.filters,
+                startPos: [action.coords.sw.lng, action.coords.sw.lat],
+                endPos: [action.coords.ne.lng, action.coords.ne.lat]
+            },
+            center: action.coords.center
+        };
+    case FILTER_CHANGE:
+        return {
+            ...state,
+            filters: {
+                ...state.filters,
+                ...action.filters
             }
         };
     case BOXES_REQUEST:
