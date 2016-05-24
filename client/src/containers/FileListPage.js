@@ -84,6 +84,11 @@ class FileListPage extends Component {
         this.scroller.removeEventListener('wheel', this.onScroll);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.props.list.isFetching !== nextProps.list.isFetching ||
+            this.props.list.files !== nextProps.list.files;
+    }
+
     render() {
         const { list } = this.props;
         const { isFetching } = list;
@@ -98,8 +103,9 @@ class FileListPage extends Component {
                     style={styles.gridList}>
                     {list.files.map(file =>
                         <GridFilePreview
-                            onSelect={this.onFileSelect.bind(null, file)}
+                            onSelect={this.onFileSelect}
                             key={file.fileId}
+                            file={file}
                             {...file}/>)}
                 </GridList>
             </Paper>);

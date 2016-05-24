@@ -30,12 +30,12 @@ const TimeDescriptor = (props) => {
 };
 
 const ImagePreview = (props) => {
-    const { name, fileId, thumbnails, createDate, onSelect } = props;
+    const { name, fileId, thumbnails, createDate, onSelect, file } = props;
     const fileUrl = getFileUrl(fileId);
 
     return (
         <GridTile
-            onTouchTap={onSelect}
+            onTouchTap={() => onSelect(file)}
             title={name}
             subtitle={<TimeDescriptor date={createDate} />}
             actionIcon={<DownloadButton name={name} url={fileUrl} />}>
@@ -61,11 +61,12 @@ const ImagePreview = (props) => {
 };
 
 const GenericPreview = (props) => {
-    const { name, fileId, createDate } = props;
+    const { name, fileId, createDate, onSelect, file } = props;
     const fileUrl = getFileUrl(fileId);
 
     return (
         <GridTile
+            onTouchTap={() => onSelect(file)}
             title={name}
             subtitle={<TimeDescriptor date={createDate} />}
             actionIcon={<DownloadButton name={name} url={fileUrl} />}>
