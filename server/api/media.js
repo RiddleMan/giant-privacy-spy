@@ -13,7 +13,8 @@ api.get('/boxes', isLogged, (req, res) => {
         //TODO: search: 'hakunamatata'
         after: req.query.after,
         before: req.query.before,
-        extensions: req.query.extensions
+        extensions: req.query.extensions,
+        _user: req.user.id
     }, (err, results) => {
         if(err)
             return res.sendStatus(500);
@@ -32,7 +33,8 @@ api.get('/', isLogged, (req, res) => {
         extensions: req.query.extensions,
         size: req.query.size && parseInt(req.query.size),
         page: req.query.page && parseInt(req.query.page),
-        sort: req.query.sort
+        sort: req.query.sort,
+        _user: req.user.id
     }, (err, results) => {
         if(err)
             return res.sendStatus(500);
@@ -50,7 +52,8 @@ api.get('/:id', isLogged, (req, res) => {
         after: req.query.after,
         before: req.query.before,
         extensions: req.query.extensions,
-        sort: req.query.sort
+        sort: req.query.sort,
+        _user: req.user.id
     }, (err, media) => {
         if(err)
             return res.sendStatus(500);
@@ -111,8 +114,11 @@ api.put('/', isLogged, (req, res) => {
     if(!id)
         res.sendStatus(400);
 
-    Media.updateFile(id, _.omit(req.body, ['_id']), (err) => {
-        console.dir(err);
+    const update = Object.assign(_.omit(req.body, ['_id']), {
+        _user: req.user.id
+    });
+
+    Media.updateFile(id, update, (err) => {
         if(err)
             return res.sendStatus(500);
 

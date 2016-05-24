@@ -5,7 +5,8 @@ const mainRouter = express.Router();
 
 const routes = [
     require('./media'),
-    require('./tracks')
+    require('./tracks'),
+    require('./tags')
 ];
 
 routes.forEach(routePath =>

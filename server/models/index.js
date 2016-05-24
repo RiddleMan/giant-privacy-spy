@@ -9,7 +9,7 @@ const bootstrap = () => {
 
             exportObj[fileNameWithoutExt] = require(`./${file}`);
         });
-}
+};
 
 const exportObj = {
     bootstrap

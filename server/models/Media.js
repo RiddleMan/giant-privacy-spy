@@ -52,6 +52,10 @@ const MediaSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    tags: [{
+        type: String,
+        index: true
+    }],
     _user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
@@ -370,6 +374,13 @@ MediaSchema.statics.updateFile = function(id, update, cb) {
             coordinates: update._loc
         };
         _update._geoHash = geohash.encode(update._loc[1], update._loc[0], 11);
+    }
+
+    if('tags' in update) {
+        this.model('Tag').createIfNotExists({
+            _user: _update._user,
+            tags: update.tags
+        });
     }
 
     this.model('Media').update({
