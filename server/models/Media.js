@@ -240,17 +240,33 @@ MediaSchema.statics.getFile = function(predicate, cb) {
         const sortPropName = predicate.sort.replace(/^-/, '');
         delete match._id;
 
-        const prevMatch = Object.assign({}, match, {
-            [sortPropName]: {
-                $lte: currFile[sortPropName]
-            }
-        });
+        let prevMatch = Object.assign({}, match);
+        if(sortPropName in match) {
+            prevMatch = {
+                $and: [
+                    prevMatch,
+                    Object.assign({}, prevMatch, {
+                        [sortPropName]: {
+                            $lte: currFile[sortPropName]
+                        }
+                    })
+                ]
+            };
+        }
 
-        const nextMatch = Object.assign({}, match, {
-            [sortPropName]: {
-                $gte: currFile[sortPropName]
-            }
-        });
+        const nextMatch = Object.assign({}, match);
+        if(sortPropName in match) {
+            prevMatch = {
+                $and: [
+                    prevMatch,
+                    Object.assign({}, prevMatch, {
+                        [sortPropName]: {
+                            $gte: currFile[sortPropName]
+                        }
+                    })
+                ]
+            };
+        }
 
         const prevSort = _predicate.sort.indexOf('-') === 0 ?
             _predicate.sort.replace(/^-/, '') : '-' + _predicate.sort;
