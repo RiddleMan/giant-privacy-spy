@@ -53,10 +53,9 @@ export const getFile = (id) =>
     (dispatch, getState) => {
         const { token, list: {
             box,
-            sort,
-            after,
-            before,
-            extensions
+            sort
+        }, map: {
+            filters
         } } = getState();
 
         dispatch(requestFile());
@@ -65,9 +64,7 @@ export const getFile = (id) =>
             token,
             box,
             sort,
-            after,
-            before,
-            extensions,
+            filter: filters,
             id
         })
         .then((r) => r.json())

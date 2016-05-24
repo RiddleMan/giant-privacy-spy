@@ -30,7 +30,13 @@ export default (state = initialState, action) => {
             isEnd: action.files < state.pageSize
         };
     case CLEAR:
-        return initialState;
+        return {
+            ...state,
+            page: 1,
+            files: [],
+            isError: false,
+            sort: '-_createDate'
+        };
     default:
         return state;
     }

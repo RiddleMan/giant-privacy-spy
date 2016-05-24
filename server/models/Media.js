@@ -231,6 +231,7 @@ MediaSchema.statics.getFile = function(predicate, cb) {
     let currFile;
 
     const getLinkedFiles = (file, cb) => {
+        const BATCH_SIZE = 100;
         currFile = file[0];
 
         if(!currFile)
@@ -239,57 +240,92 @@ MediaSchema.statics.getFile = function(predicate, cb) {
         const sortPropName = predicate.sort.replace(/^-/, '');
         delete match._id;
 
-        const prevMatch = {
-            $or: [
-                Object.assign({}, match, {
-                    [sortPropName]: {
-                        $lt: currFile[sortPropName]
-                    }
-                }),
-                Object.assign({}, match, {
-                    _id: {
-                        $lt: currFile._id
-                    }
-                })
-            ]
-        };
+        const prevMatch = Object.assign({}, match, {
+            [sortPropName]: {
+                $lte: currFile[sortPropName]
+            }
+        });
 
-        const nextMatch = {
-            $or: [
-                Object.assign({}, match, {
-                    [sortPropName]: {
-                        $gt: currFile[sortPropName]
-                    }
-                }),
-                Object.assign({}, match, {
-                    _id: {
-                        $gt: currFile._id
-                    }
-                })
-            ]
-        };
+        const nextMatch = Object.assign({}, match, {
+            [sortPropName]: {
+                $gte: currFile[sortPropName]
+            }
+        });
 
-        const nextSort = _predicate.sort.indexOf('-') === 0 ?
+        const prevSort = _predicate.sort.indexOf('-') === 0 ?
             _predicate.sort.replace(/^-/, '') : '-' + _predicate.sort;
 
+        const isReverted = _predicate.sort.indexOf('-') === 0;
+
         parallel([
-            (cb) => this.find(prevMatch)
-                .limit(1)
-                .sort(nextSort + ' _id')
-                .populate('_id')
-                .exec(cb),
-            (cb) => this.find(nextMatch)
-                .limit(1)
-                .sort(_predicate.sort + ' -_id')
-                .populate('_id')
-                .exec(cb)
+            (cb) => {
+                let count = 0;
+                const findPrev = (page = 0, cb) =>
+                    this.find(isReverted ? nextMatch : prevMatch, '_id')
+                        .sort(prevSort + ' _id')
+                        .skip(page * BATCH_SIZE)
+                        .limit(BATCH_SIZE)
+                        .exec(cb);
+
+                const checker = (err, docs) => {
+                    if(err)
+                        return cb(err);
+
+                    for(let i = 0; i < docs.length; i++) {
+                        const doc = docs[i];
+
+                        if(doc.id.toString() === predicate.id) {
+                            if((i + 2) <= docs.length)
+                                return cb(null, docs[i + 1].id);
+
+                            return cb(null, null);
+                        }
+                    }
+
+                    if(docs.length <= BATCH_SIZE) {
+                        findPrev(++count, checker);
+                    }
+                };
+
+                findPrev(count, checker);
+            },
+            (cb) => {
+                let count = 0;
+                const findNext = (page = 0, cb) => this.find(isReverted ? prevMatch : nextMatch, '_id')
+                    .sort(_predicate.sort + ' -_id')
+                    .skip(page * BATCH_SIZE)
+                    .limit(BATCH_SIZE)
+                    .exec(cb);
+
+                const checker = (err, docs) => {
+                    if(err)
+                        return cb(err);
+
+
+                    for(let i = 0; i < docs.length; i++) {
+                        const doc = docs[i];
+
+                        if(doc.id.toString() === predicate.id) {
+                            if((i + 2) <= docs.length)
+                                return cb(null, docs[i + 1].id);
+
+                            return cb(null, null);
+                        }
+                    }
+
+                    if(docs.length <= BATCH_SIZE) {
+                        findNext(++count, checker);
+                    }
+                };
+
+                findNext(count, checker);
+            }
         ], cb);
     };
 
     waterfall([
         (cb) => this.find(match)
             .limit(1)
-            .sort(_predicate.sort + ' -_id')
             .exec(cb),
         getLinkedFiles
     ], (err, linkedFiles) => {
@@ -299,12 +335,12 @@ MediaSchema.statics.getFile = function(predicate, cb) {
         if(!currFile)
             return cb(null, currFile);
 
-        const prevFile = linkedFiles[0][0];
-        const nextFile = linkedFiles[1][0];
+        const prevFile = linkedFiles[0];
+        const nextFile = linkedFiles[1];
 
         cb(null, Object.assign(currFile.toJSON(), {
-            prev: prevFile && prevFile.id,
-            next: nextFile && nextFile.id
+            prev: prevFile,
+            next: nextFile
         }));
     });
 };

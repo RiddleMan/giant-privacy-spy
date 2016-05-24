@@ -74,18 +74,6 @@ class MainPage extends Component {
                         boxes={boxes} />
                     <MainPageFilters />
                     <AddMenu />
-                    {/*<ReactCSSTransitionGroup
-                        component="div"
-                        transitionName="slide"
-                        transitionEnterTimeout={500}
-                        transitionLeaveTimeout={500}
-                        style={{
-                            zIndex: 3
-                        }}>
-                        {cloneElement(children || <div />, {
-                            key: location.pathname
-                        })}
-                    </ReactCSSTransitionGroup>*/}
                     {children}
                 </LowerContainer>
                 <DrawerPage />
