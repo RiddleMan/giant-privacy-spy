@@ -11,6 +11,7 @@ import {
 import debounce from 'lodash/debounce';
 import { getBoxes, getAllTags as apiGetAllTags } from '../utils/api';
 import getToken from '../selectors/token';
+import { routeActions } from 'react-router-redux';
 
 const requestTags = () => ({
     type: TAGS_REQUEST
@@ -20,6 +21,12 @@ const responseTags = (tags) => ({
     type: TAGS_RESPONSE,
     tags
 });
+
+export const goToMap = () =>
+    (dispatch) => {
+        dispatch(routeActions.push('/'));
+        dispatch(getAllTags());
+    };
 
 export const getAllTags = () =>
     (dispatch, getState) => {

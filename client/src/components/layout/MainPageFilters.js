@@ -20,6 +20,11 @@ class MainPageFilters extends Component {
         this.props.getAllTags();
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(this.props.pathname !== nextProps.pathname && nextProps.pathname === '/')
+            this.props.getAllTags();
+    }
+
     onTagToggle(name) {
         const filterTags = this.props.map.filters.tags;
 
@@ -105,9 +110,14 @@ class MainPageFilters extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const { map } = state;
+    const { map, routing: {
+        location: {
+            pathname
+        }
+    } } = state;
     return {
-        map
+        map,
+        pathname
     };
 };
 

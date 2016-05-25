@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { toggleLeftNav } from '../actions/layout';
 import { logout } from '../actions/token';
 import { clear as clearFilters } from '../actions/list';
-import { routeActions } from 'react-router-redux';
+import { goToMap } from '../actions/map';
 import Drawer from 'material-ui/Drawer';
 
 import { List, ListItem } from 'material-ui/List';
@@ -88,7 +88,7 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
     toggleLeftNav,
-    goToMap: () => routeActions.push('/'),
+    goToMap,
     clearFilters,
     logout
 })(DrawerPage);
