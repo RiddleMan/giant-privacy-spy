@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import moment from 'moment';
 import { List, ListItem } from 'material-ui/List';
 import ActionInfo from 'material-ui/svg-icons/action/info';
@@ -8,6 +8,9 @@ import DatePicker from 'material-ui/DatePicker';
 import Paper from 'material-ui/Paper';
 import { MapLoader } from '../map';
 import { GoogleMap, Marker } from 'react-google-maps';
+import AutoComplete from 'material-ui/AutoComplete';
+import { getAllTags } from '../../utils/api';
+import Tag from './Tag';
 
 class Minimap extends Component {
     constructor(props) {
@@ -55,6 +58,29 @@ class FileInfo extends Component {
         this.onPositionChange = this.onPositionChange.bind(this);
         this.onNameChange = this.onNameChange.bind(this);
         this.onDateChange = this.onDateChange.bind(this);
+        this.onTagAddition = this.onTagAddition.bind(this);
+        this.onTagDelete = this.onTagDelete.bind(this);
+        this.onUserType = this.onUserType.bind(this);
+
+        this.state = {
+            tagsDelete: {},
+            tags: [],
+            searchText: ''
+        };
+    }
+
+    onUserType(searchText) {
+        this.setState({
+            searchText
+        });
+    }
+
+    componentDidMount() {
+        getAllTags(this.context.store.getState().token)
+            .then((tags) =>
+                this.setState({
+                    tags
+                }));
     }
 
     onPositionChange(loc) {
@@ -72,6 +98,88 @@ class FileInfo extends Component {
     onDateChange(x, date) {
         this.props.onChange({
             _createDate: date.toISOString()
+        });
+    }
+
+    onTagDeleteTimeout(name) {
+        const { tagsDelete } = this.props;
+
+        const tId = setTimeout(() => {
+            let res = {
+                ...tagsDelete
+            };
+
+            delete res[name];
+
+            this.setState({
+                tagsDelete: res
+            });
+        }, 2 * 1000);
+
+        return {
+            cancel: () => clearTimeout(tId)
+        };
+    }
+
+    onTagDelete(name) {
+        const { file } = this.props;
+        const { tagsDelete } = this.state;
+
+        if(name in tagsDelete) {
+            tagsDelete[name].cancel();
+
+            const newDelete = {
+                ...tagsDelete
+            };
+
+            delete newDelete[name];
+
+            this.setState({
+                tagsDelete: newDelete
+            });
+
+            this.props.onChange({
+                tags: file.tags
+                    .slice()
+                    .filter((t) => t !== name)
+            });
+
+            return;
+        }
+
+        this.setState({
+            tagsDelete: {
+                ...tagsDelete,
+                [name]: this.onTagDeleteTimeout(name)
+            }
+        });
+    }
+
+    onTagAddition(tagToAdd) {
+        const { file } = this.props;
+        const { tags } = this.state;
+
+        const newTags = file.tags.slice();
+        const newAllTags = tags.slice();
+
+        if(newTags.indexOf(tagToAdd) === -1) {
+            newTags.push(tagToAdd);
+
+            this.props.onChange({
+                tags: newTags
+            });
+        }
+
+        if(newAllTags.indexOf(tagToAdd) === -1) {
+            newAllTags.push(tagToAdd);
+
+            this.setState({
+                tags: newAllTags
+            });
+        }
+
+        this.setState({
+            searchText: ''
         });
     }
 
@@ -101,8 +209,21 @@ class FileInfo extends Component {
         );
     }
 
+    get tagsForAutocomplete() {
+        const { file } = this.props;
+        const { tags } = this.state;
+
+        return tags.filter((t) => file.tags.indexOf(t) === -1);
+    }
+
     render() {
         const { file } = this.props;
+
+        const inputStyle = {
+            marginLeft: '20px',
+            marginTop: '4px',
+            width: 'calc(100% - 40px)'
+        };
 
         if(!file._createDate)
             return null;
@@ -139,6 +260,22 @@ class FileInfo extends Component {
                                 secondaryText={moment(file._createDate).format('LLL')} />
                         ]} />
                 </List>
+                {file.tags.map((tag) =>
+                    <Tag
+                        key={tag}
+                        name={tag}
+                        onToggle={this.onTagDelete}
+                        isSelected={tag in this.state.tagsDelete} />
+                )}
+                <AutoComplete
+                    fullWidth
+                    style={inputStyle}
+                    hintText="Tag"
+                    onNewRequest={this.onTagAddition}
+                    filter={AutoComplete.noFilter}
+                    onUpdateInput={this.onUserType}
+                    searchText={this.state.searchText}
+                    dataSource={this.tagsForAutocomplete} />
                 {/*Temporary*/}
                 {/*<UserInfoCard />
                   <ListItem primaryText="Inbox" leftIcon={<ContentInbox />} />
@@ -158,5 +295,9 @@ class FileInfo extends Component {
         );
     }
 }
+
+FileInfo.contextTypes = {
+    store: PropTypes.object
+};
 
 export default FileInfo;

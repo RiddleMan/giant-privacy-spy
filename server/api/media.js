@@ -14,6 +14,7 @@ api.get('/boxes', isLogged, (req, res) => {
         after: req.query.after,
         before: req.query.before,
         extensions: req.query.extensions,
+        tags: req.query.tags,
         _user: req.user.id
     }, (err, results) => {
         if(err)
@@ -34,6 +35,7 @@ api.get('/', isLogged, (req, res) => {
         size: req.query.size && parseInt(req.query.size),
         page: req.query.page && parseInt(req.query.page),
         sort: req.query.sort,
+        tags: req.query.tags,
         _user: req.user.id
     }, (err, results) => {
         if(err)
@@ -53,6 +55,7 @@ api.get('/:id', isLogged, (req, res) => {
         before: req.query.before,
         extensions: req.query.extensions,
         sort: req.query.sort,
+        tags: req.query.tags,
         _user: req.user.id
     }, (err, media) => {
         if(err)

@@ -2,18 +2,26 @@ import {
     CENTER_CHANGE,
     BOXES_REQUEST,
     BOXES_RESPONSE,
-    FILTER_CHANGE
+    FILTER_CHANGE,
+
+    TAGS_RESPONSE,
+    TAGS_REQUEST
 } from '../constants/map';
 
 const initialState = {
     boxes: [],
     filters: {
         startPos: {},
-        endPos: {}
+        endPos: {},
+        tags: []
     },
     center: {
         lat: 51.8335932,
         lng: 16.5334442
+    },
+    tags: {
+        isFetching: false,
+        items: []
     }
 };
 
@@ -43,6 +51,17 @@ export default (state = initialState, action) => {
         return {
             ...state,
             boxes: action.boxes
+        };
+
+    case TAGS_REQUEST:
+        return state;
+    case TAGS_RESPONSE:
+        return {
+            ...state,
+            tags: {
+                ...state.tags,
+                items: action.tags
+            }
         };
     default:
         return state;

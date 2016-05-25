@@ -29,8 +29,7 @@ const MediaSchema = new Schema({
         default: {}
     },
     _geoHash: {
-        type: String,
-        index: true
+        type: String
     },
     _loc: GeoJSON.Point,
     name: {
@@ -53,8 +52,7 @@ const MediaSchema = new Schema({
         default: Date.now
     },
     tags: [{
-        type: String,
-        index: true
+        type: String
     }],
     _user: {
         type: Schema.Types.ObjectId,
@@ -193,6 +191,11 @@ MediaSchema.statics.boxFiles = function(predicate, cb) {
             $in: predicate.extensions.map((ext) => new RegExp(`\\${ext}$`))
         };
 
+    if(predicate.tags)
+        match.tags = {
+            $in: predicate.tags
+        };
+
     this.aggregate()
         .match(match)
         .group({
@@ -230,6 +233,11 @@ MediaSchema.statics.getFile = function(predicate, cb) {
         match.name = {
             $in: _predicate.extensions
                 .map((ext) => new RegExp(`\\${ext}$`))
+        };
+
+    if(_predicate.tags)
+        match.tags = {
+            $in: _predicate.tags
         };
 
     let currFile;
@@ -412,6 +420,11 @@ MediaSchema.statics.unboxFiles = function(predicate, cb) {
         match.name = {
             $in: _predicate.extensions
                 .map((ext) => new RegExp(`\\${ext}$`))
+        };
+
+    if(_predicate.tags)
+        match.tags = {
+            $in: _predicate.tags
         };
 
     const skip = _predicate.size * (_predicate.page - 1);
@@ -608,7 +621,21 @@ MediaSchema.methods.saveFile = function(options, cb) {
 };
 
 MediaSchema.index({
-    _loc: '2dsphere'
+    _loc: '2dsphere',
+    name: 1,
+    _geoHash: 1,
+    _createDate: 1,
+    tags: 1,
+    _user: 1
+});
+
+MediaSchema.index({
+    _loc: '2dsphere',
+    name: 1,
+    _geoHash: 1,
+    _createDate: -1,
+    tags: 1,
+    _user: 1
 });
 
 module.exports = mongoose.model('Media', MediaSchema);

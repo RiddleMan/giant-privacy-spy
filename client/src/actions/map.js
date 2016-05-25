@@ -1,12 +1,36 @@
 import {
     CENTER_CHANGE,
     FILTER_CHANGE,
+
     BOXES_REQUEST,
-    BOXES_RESPONSE
+    BOXES_RESPONSE,
+
+    TAGS_REQUEST,
+    TAGS_RESPONSE
 } from '../constants/map';
 import debounce from 'lodash/debounce';
-import { getBoxes } from '../utils/api';
+import { getBoxes, getAllTags as apiGetAllTags } from '../utils/api';
 import getToken from '../selectors/token';
+
+const requestTags = () => ({
+    type: TAGS_REQUEST
+});
+
+const responseTags = (tags) => ({
+    type: TAGS_RESPONSE,
+    tags
+});
+
+export const getAllTags = () =>
+    (dispatch, getState) => {
+        const token = getToken(getState());
+
+        dispatch(requestTags());
+
+        apiGetAllTags(token)
+            .then((tags) => dispatch(responseTags(tags)))
+            .catch(() => {});
+    };
 
 const requestBoxes = () => {
     return {

@@ -2,11 +2,14 @@ import param from 'jquery-param';
 
 const LOGIN = __API_URL__ + 'auth/login';
 const AUTH = __API_URL__ + 'auth';
+
 const GET_BOXES = __API_URL__ + 'api/media/boxes';
 const GET_UNBOXED = __API_URL__ + 'api/media';
 const GET_FILE_STATIC = __API_URL__ + 'api/media/static/';
 const FILE_UPLOAD_PATH = __API_URL__ + 'api/media';
+
 const TRACK_UPLOAD_PATH = __API_URL__ + 'api/tracks';
+const GET_TAGS_PATH = __API_URL__ + 'api/tags';
 
 const getRequest = (options = {}) => {
     return {
@@ -130,6 +133,14 @@ export const getFile = ({
     return fetch(`${GET_UNBOXED}/${id}?${params}`, getAuthorizedRequest({
         token
     }));
+};
+
+export const getAllTags = (token) => {
+    return fetch(GET_TAGS_PATH, getAuthorizedRequest({
+        token
+    }))
+    .then((r) => r.json())
+    .then((tags) => tags.map((t) => t.name));
 };
 
 export const updateFile = ({
