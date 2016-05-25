@@ -6,6 +6,7 @@ const Tag = (props) => {
 
     return (
         <RaisedButton
+            className="tag-btn"
             style={{
                 margin: 5
             }}

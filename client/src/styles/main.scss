@@ -126,3 +126,21 @@
     width: 300px;
     position: relative;
 }
+
+.tag-btn {
+    button {
+        height: 17px !important;
+        line-height: 17px !important;
+        & > div {
+            & > div {
+                height: 17px !important;
+                & > span {
+                    padding: 0 8px !important;
+                    font-size: 10px !important;
+                }
+            }
+        }
+
+
+    }
+}
