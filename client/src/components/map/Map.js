@@ -33,6 +33,8 @@ const BoxMarker = (props) => {
         coordinates
     }, onClick } = props;
 
+    const image = count > 9 ? '9+' : count;
+
     return (
         <Marker
             {...props}
@@ -43,7 +45,7 @@ const BoxMarker = (props) => {
                     lat: coordinates[1]
                 }
             })}
-            label={'' + count}
+            icon={require(`./icons/${image}.png`)}
             position={{
                 lng: coordinates[0],
                 lat: coordinates[1]
