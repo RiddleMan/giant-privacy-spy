@@ -21,7 +21,7 @@ const bootstrap = (cb) => {
         console.error.bind(
             console, '[MONGOOSE]: Connection error'));
 
-    db.on('disconnected', connect);
+    //db.on('disconnected', connect);
 
     models.bootstrap();
 }

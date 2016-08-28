@@ -3,18 +3,27 @@ services:
   gps-client:
     build: ./client
     ports:
-     - "3000:3000"
+      - "8080:8080"
     volumes:
-     - ./client:/usr/src/app
+      - ./client:/usr/src/app
+    links:
+      - gps-server
     depends_on:
-     - gps-server
+      - gps-server
   gps-server:
     build: ./server
+    links:
+      - gps-db
     ports:
-     - "3001:3001"
+      - "3001:3001"
     volumes:
-     - ./server:/usr/src/app
+      - ./server:/usr/src/app
     depends_on:
-     - mongo
-  mongo:
+      - gps-db
+  gps-db:
     image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./volumes/db/:/data/db
+      - ./volumes/configdb/:/data/configdb

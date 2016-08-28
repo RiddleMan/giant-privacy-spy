@@ -6,6 +6,7 @@ WORKDIR /usr/src/app
 # Install app dependencies
 COPY . /usr/src/app/
 RUN npm install
+ENV NODE_ENV production
 
 EXPOSE 3001
-CMD [ "npm", "start" ]
+CMD ["npm", "start" ]

@@ -7,5 +7,9 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app/
 RUN npm install
 
-EXPOSE 3000
-CMD [ "npm", "start" ]
+ENV __API_URL__ gps-server
+
+RUN npm run build
+
+EXPOSE 8080
+CMD [ "npm", "run", "run" ]

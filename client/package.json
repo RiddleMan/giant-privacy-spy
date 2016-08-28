@@ -10,7 +10,12 @@
   "mainInput": "main",
   "mainOutput": "main",
   "scripts": {
-    "start": "babel-node server.js"
+    "start": "babel-node server.js",
+    "build": "npm run clean && npm run build:webpack && npm run copy",
+    "build:webpack": "babel-node ./node_modules/webpack/bin/webpack.js --config webpack.dist.config.js",
+    "clean": "rm -Rf dist",
+    "copy": "cp -R src/images/* dist && cp src/index.html dist",
+    "run": "http-server dist/"
   },
   "dependencies": {
     "autoprefixer-loader": "^3.2.0",
@@ -56,6 +61,7 @@
     "eslint-plugin-react": "^3.2.3",
     "exports-loader": "^0.6.2",
     "file-loader": "^0.8.5",
+    "http-server": "^0.9.0",
     "imports-loader": "^0.6.4",
     "json-loader": "^0.5.3",
     "node-sass": "^3.4.2",
