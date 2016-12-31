@@ -51,10 +51,6 @@ class DrawerPage extends Component {
                             }}
                             primaryText="Map"
                             leftIcon={<Map />} />
-                        <ListItem primaryText="Starred" leftIcon={<ActionGrade />} />
-                        <ListItem primaryText="Sent mail" leftIcon={<ContentSend />} />
-                        <ListItem primaryText="Drafts" leftIcon={<ContentDrafts />} />
-                        <ListItem primaryText="Inbox" leftIcon={<ActionGrade />} />
                     </List>
                 <Divider />
                 <List>

@@ -8,7 +8,8 @@ const Tag = (props) => {
         <RaisedButton
             className="tag-btn"
             style={{
-                margin: 5
+                margin: 5,
+                cursor: 'not-allowed'
             }}
             label={name}
             onTouchTap={() => onToggle(name)}
