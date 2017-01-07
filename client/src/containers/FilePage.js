@@ -80,5 +80,5 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
     filePropChange,
     getFile,
-    goToFile: (id) => routeActions.push(`/file/${id}`)
+    goToFile: (id) => routeActions.replace(`/file/${id}`)
 })(FilePage);

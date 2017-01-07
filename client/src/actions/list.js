@@ -13,8 +13,13 @@ export const goToList = ({
     _id //,
     // center
 }) => {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         // dispatch(changeCenter(center)); TODO: add center mechanism later
+
+        const state = getState();
+        if(state.routing.location.pathname.startsWith('/list'))
+            return dispatch(routeActions.replace(`list/${_id}`));
+
         dispatch(routeActions.push(`list/${_id}`));
     };
 };
