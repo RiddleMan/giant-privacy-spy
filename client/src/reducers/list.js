@@ -35,6 +35,8 @@ export default (state = initialState, action) => {
             page: 1,
             files: [],
             isError: false,
+            isEnd: false,
+            isFetching: false,
             sort: '-_createDate'
         };
     default:

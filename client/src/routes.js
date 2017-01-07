@@ -27,7 +27,9 @@ class Routes extends Component {
                     <Route path="/login" component={ LoginPage } />
                     <Route path="/" component={ MainPage } onEnter={this.isAuthorized}>
                         <Route path="/file/:id" component={ FilePage }/>
-                        <Route path="/list/:id" component={ FileListPage }/>
+                        <Route
+                            path="/list/:id"
+                            component={ FileListPage }/>
                     </Route>
                 </Route>
             </Router>

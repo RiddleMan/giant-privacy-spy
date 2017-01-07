@@ -64,7 +64,6 @@ class FilePage extends Component {
     }
 }
 
-const noop = () => {};
 
 FilePage.defaultProps = {
     content: {}

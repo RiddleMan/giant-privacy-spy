@@ -3,7 +3,6 @@ import {
     FILE_REQUEST,
 
     FILE_PROP_REQUEST,
-    FILE_PROP_RESPONSE,
 
     CLEAR
 } from '../constants/file';

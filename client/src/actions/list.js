@@ -1,5 +1,5 @@
 import { routeActions } from 'react-router-redux';
-import { changeCenter } from './map';
+// import { changeCenter } from './map';
 import {
     SET_BOX,
     REQUEST_UNBOX,
@@ -10,8 +10,8 @@ import { getFiles } from '../utils/api';
 import getToken from '../selectors/token';
 
 export const goToList = ({
-    _id,
-    center
+    _id //,
+    // center
 }) => {
     return (dispatch) => {
         // dispatch(changeCenter(center)); TODO: add center mechanism later

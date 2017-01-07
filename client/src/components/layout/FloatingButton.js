@@ -5,10 +5,10 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 export default class FloatingButton extends Component {
     render() {
-        const { isLoading } = this.props;
+        const { isLoading, ...rest } = this.props;
 
         return (
-            <FloatingActionButton {...this.props}>
+            <FloatingActionButton {...rest}>
                 {isLoading ? <CircularProgress size={0.5} /> : <Add />}
             </FloatingActionButton>
         );

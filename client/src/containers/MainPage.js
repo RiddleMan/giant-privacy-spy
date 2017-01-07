@@ -1,4 +1,4 @@
-import React, { cloneElement, Component } from 'react';
+import React, { Component } from 'react';
 import { AppBar, AddMenu, MainPageFilters } from '../components/layout';
 import { Map } from '../components/map';
 import { fitContainer } from '../utils/styles';
@@ -56,9 +56,7 @@ class MainPage extends Component {
             centerChange,
             goToList,
             children,
-            location,
-            isOpen,
-            leftNav
+            isOpen
         } = this.props;
 
         return (

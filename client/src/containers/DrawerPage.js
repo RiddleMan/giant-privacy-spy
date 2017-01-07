@@ -8,9 +8,6 @@ import Drawer from 'material-ui/Drawer';
 
 import { List, ListItem } from 'material-ui/List';
 import Map from 'material-ui/svg-icons/maps/map';
-import ActionGrade from 'material-ui/svg-icons/action/grade';
-import ContentSend from 'material-ui/svg-icons/content/send';
-import ContentDrafts from 'material-ui/svg-icons/content/drafts';
 import Divider from 'material-ui/Divider';
 import ExitToApp from 'material-ui/svg-icons/action/exit-to-app';
 import UserInfoCard from './UserInfoCard';

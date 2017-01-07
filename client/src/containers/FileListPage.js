@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import { GridList } from 'material-ui/GridList';
 import { GridFilePreview } from '../components/layout';
@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { routeActions } from 'react-router-redux';
 import { clear, getNextUnboxed, setGeoHash } from '../actions/list';
 import { findDOMNode } from 'react-dom';
-
+import CircularProgress from 'material-ui/CircularProgress';
 
 /* eslint-disable */
 const styles = {
@@ -69,24 +69,28 @@ class FileListPage extends Component {
 
     componentWillUpdate(nextProps) {
         if(nextProps.params.id !== this.props.params.id) {
-            const { setGeoHash, clear } = this.props;
+            const { setGeoHash, clear, getNextUnboxed } = this.props;
             const { params: { id } } = nextProps;
 
             clear();
             setGeoHash(id);
+            getNextUnboxed();
         }
     }
 
     componentWillUnmount() {
         const { clear } = this.props;
         clear();
+
         window.removeEventListener('resize', this.onResize);
-        this.scroller.removeEventListener('wheel', this.onScroll);
+        if(this.scroller)
+            this.scroller.removeEventListener('wheel', this.onScroll);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps) {
         return this.props.list.isFetching !== nextProps.list.isFetching ||
-            this.props.list.files !== nextProps.list.files;
+            this.props.list.files !== nextProps.list.files
+            || this.props.params.id !== nextProps.params.id;
     }
 
     render() {
@@ -108,6 +112,14 @@ class FileListPage extends Component {
                             file={file}
                             {...file}/>)}
                 </GridList>
+                { isFetching && <CircularProgress
+                    style={{
+                        position: 'fixed',
+                        bottom: 10,
+                        left: '50%',
+                        transform: 'translateX(-50%)'
+                    }}
+                    size={1}/> }
             </Paper>);
     }
 }

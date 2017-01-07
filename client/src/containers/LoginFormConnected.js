@@ -44,6 +44,7 @@ export default reduxForm({
     onSubmit: (values, dispatch) => {
         const user = values.user;
         const password = values.password;
+
         return login({
             user,
             password
@@ -51,16 +52,15 @@ export default reduxForm({
         .then((response) => {
             return response.json();
         })
-        .catch(() => {
-            return {
-                _error: 'Wrong username or password'
-            };
-        })
         .then((res) => {
             dispatch(changeToken(res.token));
             dispatch(routeActions.push('/'));
 
             return {};
+        }, () => {
+            return {
+                _error: 'Wrong username or password'
+            };
         });
     }
 })(LoginForm);

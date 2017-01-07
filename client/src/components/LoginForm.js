@@ -99,8 +99,8 @@ const LoginFields = (props) => {
                 {...password}/>
             {error && <p>Wrong username or password</p>}
             <RaisedButton
-                onTouchTap={handleSubmit}
                 primary
+                type="submit"
                 disabled={submitting}
                 label={
                     <div

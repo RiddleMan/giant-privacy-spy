@@ -65,7 +65,7 @@ class ImagePreview extends Component {
     }
 
     render() {
-        const { file, isFetching } = this.props;
+        const { file/*, isFetching */} = this.props;
         const { width, height } = this.state;
 
         let url;

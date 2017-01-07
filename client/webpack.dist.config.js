@@ -17,7 +17,11 @@ export default {
         publicPath: '/static/'
     },
 
-    devtool: 'eval-source-map',
+    profile: false,
+    debug: false,
+    progress: false,
+    devtool: false,
+
     entry: [
         './src/index.js'
     ],
@@ -50,24 +54,25 @@ export default {
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin({
-            compressor: {
-                warnings: false
-            }
-        }),
-        new webpack.DefinePlugin({
-            __DEV__: false,
-            __DEVTOOLS__: false,
-            __API_URL__: `\'${API_URL}\'`,
-            'process': {
-                'env': {
-                    'NODE_ENV': '"production"'
-                }
+            output: {
+                comments: false
+            }, compressor: {
+                warnings: false,
+                screw_ie8: true
             }
         }),
         new webpack.optimize.AggressiveMergingPlugin(),
         new webpack.NoErrorsPlugin(),
         new webpack.ProvidePlugin({
             fetch: 'babel-loader!imports?this=>global!exports?global.fetch!whatwg-fetch'
+        }),
+        new webpack.DefinePlugin({
+            __DEV__: false,
+            __DEVTOOLS__: false,
+            __API_URL__: `\'${API_URL}\'`,
+            'process.env': {
+                NODE_ENV: JSON.stringify('production')
+            }
         })
     ]
 
