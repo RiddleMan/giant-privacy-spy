@@ -4,8 +4,6 @@ services:
     build: ./client
     ports:
       - "8080:8080"
-    volumes:
-      - ./client:/usr/src/app
     links:
       - gps-server
     depends_on:
@@ -16,12 +14,10 @@ services:
       - gps-db
     ports:
       - "3001:3001"
-    volumes:
-      - ./server:/usr/src/app
     depends_on:
       - gps-db
   gps-db:
-    image: mongo
+    image: mongo:3.2
     ports:
       - "27017:27017"
     volumes:
