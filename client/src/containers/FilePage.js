@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { routeActions } from 'react-router-redux';
-import { getFile, filePropChange } from '../actions/file';
+import { getFile, filePropChange, removeFile } from '../actions/file';
 import Paper from 'material-ui/Paper';
 import { FileCarousel, FileInfo, DownloadButton } from '../components/layout';
 import { getFileUrl } from '../utils/api';
@@ -15,6 +15,7 @@ class FilePage extends Component {
         this.state = {};
         this.onPrev = this.onPrev.bind(this);
         this.onNext = this.onNext.bind(this);
+        this.onFileRemove = this.onFileRemove.bind(this);
     }
 
     onPrev() {
@@ -50,6 +51,10 @@ class FilePage extends Component {
             this.getNewFile(nextProps);
     }
 
+    onFileRemove() {
+        this.props.removeFile();
+    }
+
     render() {
         const {
             content,
@@ -75,7 +80,7 @@ class FilePage extends Component {
                         <DownloadButton
                             name={content.name} url={fileUrl} />
                         <IconButton
-                            onTouchTap={this.onDelete}>
+                            onTouchTap={this.onFileRemove}>
                             <DeleteIcon color='white' />
                         </IconButton>
                     </div>
@@ -99,6 +104,7 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
     filePropChange,
+    removeFile,
     getFile,
     goToFile: (id) => routeActions.replace(`/file/${id}`)
 })(FilePage);

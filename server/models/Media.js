@@ -436,6 +436,39 @@ MediaSchema.statics.unboxFiles = function(predicate, cb) {
         .exec(cb);
 };
 
+MediaSchema.statics.remove = function(id, user, cb) {
+    const gfs = getGrid();
+    const removeDeps = function(media, cb) {
+        const thumbs = media.thumbnails.toJSON();
+        const thunks = Object.keys(thumbs)
+            .filter(function(name) {
+                return thumbs[name];
+            })
+            .map(function(name) {
+                const _id = thumbs[name];
+
+                return function(cb) {
+                    gfs.remove({ _id: _id.toString() }, cb);
+                };
+            });
+
+        parallel(thunks, cb);
+    };
+
+    this.findOneAndRemove({
+        _id: id,
+        _user: user
+    }, (err, media) => {
+        if(err)
+            return cb(err);
+
+        if(media)
+            return removeDeps(media, cb);
+
+        cb();
+    });
+};
+
 const exifMimeTypes = [
     'image/jpeg'
 ];

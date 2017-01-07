@@ -1,4 +1,8 @@
-import { getFile as getFileApi, updateFile } from '../utils/api';
+import {
+    getFile as getFileApi,
+    updateFile,
+    removeFile as removeFileApi
+} from '../utils/api';
 import {
     FILE_RESPONSE,
     FILE_REQUEST,
@@ -8,6 +12,7 @@ import {
 
     CLEAR
 } from '../constants/file';
+import { routeActions } from 'react-router-redux';
 
 const requestProp = (update) => ({
     type: FILE_PROP_REQUEST,
@@ -69,4 +74,39 @@ export const getFile = (id) =>
         })
         .then((r) => r.json())
         .then((file) => dispatch(responseFile(file)));
+    };
+
+export const removeFile = () =>
+    (dispatch, getState) => {
+        const goToFile = (id) =>
+            dispatch(routeActions.replace(`/file/${id}`));
+        const goToMap = () =>
+            dispatch(routeActions.replace('/'));
+
+        const {
+            token,
+            file: {
+                content: {
+                    next,
+                    prev,
+                    _id: id
+                }
+            }
+        } = getState();
+
+        dispatch(requestFile());
+
+        removeFileApi({
+            token,
+            id
+        })
+        .then(() => {
+            if(!next && !prev)
+                return goToMap();
+
+            if(next)
+                return goToFile(next);
+
+            goToFile(prev);
+        }, () => {});
     };

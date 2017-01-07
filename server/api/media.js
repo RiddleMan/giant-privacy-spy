@@ -130,18 +130,15 @@ api.put('/', isLogged, (req, res) => {
 });
 
 api.delete('/:id', isLogged, (req, res) => {
-    Media.findOneAndRemove({
-        _id: req.params.id,
-        _user: req.user._id
-    }, (err, media) => {
-        if(err)
-            return res.sendStatus(500);
+    Media.remove(
+        req.params.id,
+        req.user._id,
+        (err) => {
+            if(err)
+                return res.sendStatus(500);
 
-        if(!media)
-            res.sendStatus(404);
-
-        res.sendStatus(200);
-    });
+            res.sendStatus(200);
+        });
 });
 
 module.exports = api.main;

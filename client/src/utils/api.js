@@ -158,6 +158,16 @@ export const updateFile = ({
     }));
 };
 
+export const removeFile = ({
+    token,
+    id
+}) => {
+    return fetch(`${GET_UNBOXED}/${id}`, getAuthorizedRequest({
+        method: 'DELETE',
+        token
+    }));
+};
+
 export const getFileUrl = (fileId) => `${GET_FILE_STATIC}${fileId}`;
 
 export const getUserInfo = (token) => {
