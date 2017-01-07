@@ -1,26 +1,9 @@
 import React, { Component } from 'react';
 import { GridTile } from 'material-ui/GridList';
-import FileDownload from 'material-ui/svg-icons/file/file-download';
-import IconButton from 'material-ui/IconButton';
 import { getFileUrl } from '../../utils/api';
 import moment from 'moment';
 import pureRender from '../../utils/pureRender';
-
-const DownloadButton = (props) => {
-    const { name, url } = props;
-    const onDownload = () => {
-        const aEl = document.createElement('a');
-        aEl.href = url;
-        aEl.download = name;
-        aEl.click();
-    };
-
-    return (
-        <IconButton onTouchTap={onDownload}>
-            <FileDownload color="white"/>
-        </IconButton>
-    );
-};
+import DownloadButton from './DownloadButton';
 
 const TimeDescriptor = (props) => {
     const { date } = props;

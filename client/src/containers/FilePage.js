@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import { routeActions } from 'react-router-redux';
 import { getFile, filePropChange } from '../actions/file';
 import Paper from 'material-ui/Paper';
-import { FileCarousel, FileInfo } from '../components/layout';
+import { FileCarousel, FileInfo, DownloadButton } from '../components/layout';
+import { getFileUrl } from '../utils/api';
+import DeleteIcon from 'material-ui/svg-icons/action/delete';
+import IconButton from 'material-ui/IconButton';
 
 class FilePage extends Component {
     constructor(props) {
@@ -48,7 +51,12 @@ class FilePage extends Component {
     }
 
     render() {
-        const { content, isFetching, filePropChange } = this.props;
+        const {
+            content,
+            isFetching,
+            filePropChange
+        } = this.props;
+        const fileUrl = getFileUrl(content.fileId);
 
         return (
             <Paper className='file-page__overlay'>
@@ -57,9 +65,21 @@ class FilePage extends Component {
                     onNext={this.onNext}
                     onPrev={this.onPrev}
                     file={content}/>
-                <FileInfo
-                    onChange={filePropChange}
-                    file={content} />
+                <Paper
+                    zDepth={4}
+                    className='file-page__content'>
+                    <FileInfo
+                        onChange={filePropChange}
+                        file={content} />
+                    <div className="file-page__actions">
+                        <DownloadButton
+                            name={content.name} url={fileUrl} />
+                        <IconButton
+                            onTouchTap={this.onDelete}>
+                            <DeleteIcon color='white' />
+                        </IconButton>
+                    </div>
+                </Paper>
             </Paper>);
     }
 }

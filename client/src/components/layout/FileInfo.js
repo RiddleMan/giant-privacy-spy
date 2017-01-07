@@ -1,7 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import moment from 'moment';
 import { List, ListItem } from 'material-ui/List';
-import ActionInfo from 'material-ui/svg-icons/action/info';
 import ActionWatchLater from 'material-ui/svg-icons/action/watch-later';
 import Image from 'material-ui/svg-icons/image/image';
 import DatePicker from 'material-ui/DatePicker';
@@ -229,8 +227,7 @@ class FileInfo extends Component {
             return null;
 
         return (
-            <Paper
-                zDepth={4}
+            <div
                 className="file-info">
                 <Minimap
                     onChange={this.onPositionChange}
@@ -245,20 +242,6 @@ class FileInfo extends Component {
                         leftIcon={<ActionWatchLater />}
                         primaryText="Created"
                         secondaryText={this.renderDate()} />
-                    <ListItem
-                        leftIcon={<ActionInfo />}
-                        primaryText="Details"
-                        nestedItems={[
-                            <ListItem
-                                leftIcon={<Image />}
-                                primaryText="Name"
-                                secondaryText={file.name}
-                            />,
-                            <ListItem
-                                leftIcon={<ActionWatchLater />}
-                                primaryText="Created"
-                                secondaryText={moment(file._createDate).format('LLL')} />
-                        ]} />
                 </List>
                 {file.tags.map((tag) =>
                     <Tag
@@ -291,7 +274,7 @@ class FileInfo extends Component {
                     primaryText="Logout"
                     rightIcon={<ExitToApp />} />
                 </List>*/}
-            </Paper>
+            </div>
         );
     }
 }
