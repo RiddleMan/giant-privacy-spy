@@ -7,6 +7,7 @@ const connection = mongoose.connection;
 const errno = require('errno');
 const parallel = require('run-parallel');
 const waterfall = require('run-waterfall');
+const series = require('run-series');
 const getImageExif = require('./utils').getImageExif;
 const getExifCoordinates = require('./utils').getExifCoordinates;
 const getExifDate = require('./utils').getExifDate;
@@ -90,13 +91,13 @@ MediaSchema.virtual('createDate')
         return this._id.getTimestamp();
     })
     .set(function(val) {
-        if(this.exif)
+        if(this.exif && this.exif.exif.CreateDate)
             return this._createDate = getExifDate(this.exif).toISOString();
 
         if(val)
             return this._createDate = val;
 
-        this._craeteDate = this._id.getTimestamp();
+        this._createDate = this._id.getTimestamp();
     });
 
 MediaSchema.statics.getStaticFile = (id, cb) => {
@@ -374,6 +375,7 @@ MediaSchema.statics.getFile = function(predicate, cb) {
 };
 
 MediaSchema.statics.updateFile = function(id, update, cb) {
+    const model = this.model('Media');
     const _update = Object.assign({}, update);
 
     if('_loc' in update) {
@@ -384,6 +386,7 @@ MediaSchema.statics.updateFile = function(id, update, cb) {
         _update._geoHash = geohash.encode(update._loc[1], update._loc[0], 11);
     }
 
+
     if('tags' in update) {
         this.model('Tag').createIfNotExists({
             _user: _update._user,
@@ -391,9 +394,25 @@ MediaSchema.statics.updateFile = function(id, update, cb) {
         });
     }
 
-    this.model('Media').update({
+    model.findOne({
         _id: new mongoose.Types.ObjectId(id)
-    }, _update, cb);
+    }, function(err, media) {
+        Object.keys(_update)
+            .filter((key) => key !== '_user')
+            .forEach((key) => {
+                media[key] = _update[key];
+            });
+
+        const thunks = [];
+
+        if('_createDate' in update) {
+            thunks.push((cb) => media.setLocation(cb));
+        }
+
+        thunks.push((cb) => media.save(cb));
+
+        series(thunks, cb);
+    });
 };
 
 MediaSchema.statics.unboxFiles = function(predicate, cb) {
@@ -474,13 +493,13 @@ const exifMimeTypes = [
 ];
 
 MediaSchema.methods.setLocation = function(cb) {
-    if(this.exif && this.exif.gps.GPSLatitudeRef) {
+    if(this.exif && this.exif.gps && this.exif.gps.GPSLatitudeRef) {
         this.loc = getExifCoordinates(this.exif);
         return process.nextTick(() => cb());
     }
 
     this.model('Track').findOne({
-        _user: this._user._id,
+        _user: this._user,
         _createDate: {
             $lt: moment(this.createDate).add(1, 'h').toDate(),
             $gte: moment(this.createDate).subtract(30, 'm').toDate()

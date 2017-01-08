@@ -40,6 +40,10 @@ const getExifCoordinates = (exif) => {
 
 const getExifDate = (exif) => {
     const dateStr = exif.exif.CreateDate;
+
+    if(!dateStr)
+        return new Date();
+
     const dateHourArr = dateStr.split(' ');
     dateHourArr[0] = dateHourArr[0].replace(/:/g, '/');
 

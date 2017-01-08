@@ -1,7 +1,10 @@
 version: '2'
 services:
   gps-client:
-    build: ./client
+    build:
+      context: ./client
+      args:
+        API_URL: "http://192.168.3.67:3001/"
     ports:
       - "8080:8080"
     links:
@@ -16,6 +19,7 @@ services:
       - "3001:3001"
     depends_on:
       - gps-db
+    tmpfs: /tmp
   gps-db:
     image: mongo:3.2
     ports:
