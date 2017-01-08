@@ -8,6 +8,7 @@ export const MapLoader = (props) => {
 
     const sectionStyle = {
         flex: 1,
+        display: 'flex',
         ...style
     };
 
@@ -15,14 +16,18 @@ export const MapLoader = (props) => {
         <ScriptjsLoader
             hostname={"maps.googleapis.com"}
             pathname={"/maps/api/js"}
-            query={{v: `3.23.2`, libraries: 'geometry,drawing,places'}}
+            query={{
+                v: `3.23.2`,
+                libraries: 'geometry,drawing,places',
+                key: 'AIzaSyBdVtYB52VVT08H46qGtQw-xvK6AKT_MEk'
+            }}
             loadingElement={
                 <div style={{ height: '100%' }}>
                     <CircularProgress mode="indeterminate" />
                 </div>
             }
             containerElement={
-                <div style={{ height: '100%' }} />
+                <div style={{ flex: 1 }} />
             }
             googleMapElement={children} />
     </section>);
