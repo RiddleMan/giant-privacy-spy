@@ -581,9 +581,9 @@ const createThumbnails = (imgStream, mimeType, fileName, cb) => {
                 resize.bind(null, originalPath, 800),
                 resize.bind(null, originalPath, 1000),
                 resize.bind(null, originalPath, 1920),
-                exifMimeTypes.indexOf(mimeType) !== -1 ?
-                   getImageExif.bind(null, originalPath) :
-                   (cb) => cb
+                exifMimeTypes.indexOf(mimeType) !== -1
+                    ? getImageExif.bind(null, originalPath)
+                    : (cb) => cb()
             ], cb);
         }
     ], (err, ids) => {

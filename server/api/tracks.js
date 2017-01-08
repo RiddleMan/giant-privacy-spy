@@ -2,18 +2,59 @@ const api = require('../utils').api('/tracks');
 const isLogged = require('../auth').isLogged;
 const Busboy = require('busboy');
 const Track = require('../models/Track');
-const through = require('through2');
 const JSONStream = require('JSONStream');
+const tmp = require('tmp');
+const fs = require('fs');
+const Writable = require('stream').Writable;
+const getFloatCoord = require('../models/utils').getFloatCoord;
+
+const mapToDoc = (user) => ({
+    accuracy,
+    timestampMs,
+    longitudeE7,
+    latitudeE7
+}) => {
+    return {
+        _user: user._id,
+        accuracy,
+
+        loc: {
+            coordinates: [
+                getFloatCoord(longitudeE7),
+                getFloatCoord(latitudeE7)
+            ],
+            type: 'Point'
+        },
+        _createDate: new Date(parseInt(timestampMs))
+    };
+};
 
 const trackStream = (user) => {
-    return through.obj(function(googleTrack, enc, cb) {
-        const track = new Track(googleTrack);
-        track._user = user;
+    return new Writable({
+        objectMode: true,
+        writev(chunks, cb) {
+            const mapper = mapToDoc(user);
 
-        this.push('');
+            const docs = chunks.map(({chunk}) =>
+                mapper(chunk));
 
-        track.save(() => cb());
+            Track.collection.insert(docs, cb);
+        },
+        write(googleTrack, enc, cb) {
+            Track.collection.insert(
+                [
+                    mapToDoc(user)(googleTrack)
+                ],
+                cb);
+        }
     });
+};
+
+const processTracks = (user, filePath, cleanupCb) => {
+    fs.createReadStream(filePath)
+        .pipe(JSONStream.parse('locations.*'))
+        .pipe(trackStream(user))
+        .on('finish', cleanupCb);
 };
 
 api.post('/', isLogged, (req, res) => {
@@ -24,18 +65,19 @@ api.post('/', isLogged, (req, res) => {
         headers: req.headers
     });
 
+    const sendSuccess = (...args) => () => {
+        res.writeHead(201, { Connection: 'close' });
+        res.end();
+
+        processTracks(...args);
+    };
+
     busboy.on('file', (fieldname, file) => {
-        file
-            .pipe(JSONStream.parse('locations.*'))
-            .pipe(trackStream(req.user))
-            .on('data', () => {})
-            .on('error', () => {
-                res.sendStatus(500);
-            })
-            .on('end', () => {
-                res.writeHead(201, { Connection: 'close' });
-                res.end();
-            });
+        tmp.file(function(err, path, _, cleanupCb) {
+            file
+                .pipe(fs.createWriteStream(path))
+                .on('finish', sendSuccess(req.user, path, cleanupCb));
+        });
     });
 
     req.pipe(busboy);
