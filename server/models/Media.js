@@ -178,6 +178,12 @@ MediaSchema.statics.boxFiles = function(predicate, cb) {
         }
     };
 
+    if(predicate.searchPhrase)
+        match.$text = {
+            $search: predicate.searchPhrase,
+            $language: 'en'
+        };
+
     if(predicate.after || predicate.before)
         match._createDate = {};
 
@@ -217,6 +223,12 @@ MediaSchema.statics.getFile = function(predicate, cb) {
     const match = {
         _id: new mongoose.Types.ObjectId(predicate.id)
     };
+
+    if(_predicate.searchPhrase)
+        match.$text = {
+            $search: _predicate.searchPhrase,
+            $language: 'en'
+        };
 
     if(predicate.box)
         match._geoHash = new RegExp(`^${_predicate.box}`);
@@ -425,6 +437,12 @@ MediaSchema.statics.unboxFiles = function(predicate, cb) {
     const match = {
         _geoHash: new RegExp(`^${_predicate.box}`)
     };
+
+    if(_predicate.searchPhrase)
+        match.$text = {
+            $search: _predicate.searchPhrase,
+            $language: 'en'
+        };
 
     if(_predicate.after || _predicate.before)
         match._createDate = {};
@@ -676,8 +694,32 @@ MediaSchema.methods.saveFile = function(options, cb) {
 };
 
 MediaSchema.index({
+    name: 'text'
+});
+
+MediaSchema.index({
+    _loc: '2dsphere'
+});
+
+MediaSchema.index({
+    _user: 1
+});
+
+MediaSchema.index({
+    tags: 1
+});
+
+MediaSchema.index({
+    _createDate: 1
+});
+
+MediaSchema.index({
+    _geoHash: 1
+});
+
+MediaSchema.index({
     _loc: '2dsphere',
-    name: 1,
+    name: 'text',
     _geoHash: 1,
     _createDate: 1,
     tags: 1,
@@ -686,7 +728,7 @@ MediaSchema.index({
 
 MediaSchema.index({
     _loc: '2dsphere',
-    name: 1,
+    name: 'text',
     _geoHash: 1,
     _createDate: -1,
     tags: 1,

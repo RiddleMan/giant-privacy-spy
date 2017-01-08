@@ -10,7 +10,7 @@ api.get('/boxes', isLogged, (req, res) => {
         startPosition: req.query.startPos,
         endPosition: req.query.endPos,
 
-        //TODO: search: 'hakunamatata'
+        searchPhrase: req.query.searchPhrase,
         after: req.query.after,
         before: req.query.before,
         extensions: req.query.extensions,
@@ -28,7 +28,7 @@ api.get('/', isLogged, (req, res) => {
     Media.unboxFiles({
         box: req.query.box,
 
-        //TODO: search: 'hakunamatata'
+        searchPhrase: req.query.searchPhrase,
         after: req.query.after,
         before: req.query.before,
         extensions: req.query.extensions,
@@ -49,7 +49,7 @@ api.get('/:id', isLogged, (req, res) => {
     Media.getFile({
         id: req.params.id,
 
-        //TODO: search: 'hakunamatata'
+        searchPhrase: req.query.searchPhrase,
         box: req.query.box,
         after: req.query.after,
         before: req.query.before,
