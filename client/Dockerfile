@@ -1,6 +1,6 @@
 FROM node:6.1
 
-ARG API_URL="http://localhost:3001/"
+ARG API_URL="http://gps.riddleman.me:3001/"
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 

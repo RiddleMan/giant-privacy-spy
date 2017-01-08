@@ -6,7 +6,7 @@ services:
       args:
         API_URL: "http://192.168.3.67:3001/"
     ports:
-      - "8080:8080"
+      - "80:8080"
     links:
       - gps-server
     depends_on:
@@ -25,5 +25,5 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./volumes/db/:/data/db
-      - ./volumes/configdb/:/data/configdb
+      - /volumes/db/:/data/db
+      - /volumes/configdb/:/data/configdb
