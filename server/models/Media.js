@@ -526,14 +526,17 @@ const createThumbnails = (imgStream, mimeType, fileName, cb) => {
             .on('error', (err) => cb(err));
     };
 
-    const resize = (originalImgPath, width, cb) => {
+    const resize = (originalImgPath, originalId, width, cb) => {
         im.identify(['-format', '%wx%h', originalImgPath], (err, rawDim) => {
             if(err)
                 return cb(err);
 
             const dims = rawDim.split('x');
-            const w = dims[0];
-            const h = dims[1];
+            const [w, h] = dims;
+
+            if(w < width)
+                return cb(null, originalId);
+
             const ratio = w / width > 1 ? 1 : w / width;
 
             const rDim = {
@@ -577,10 +580,10 @@ const createThumbnails = (imgStream, mimeType, fileName, cb) => {
             _originalId = originalId;
 
             parallel([
-                resize.bind(null, originalPath, 500),
-                resize.bind(null, originalPath, 800),
-                resize.bind(null, originalPath, 1000),
-                resize.bind(null, originalPath, 1920),
+                resize.bind(null, originalPath, originalId, 500),
+                resize.bind(null, originalPath, originalId, 800),
+                resize.bind(null, originalPath, originalId, 1000),
+                resize.bind(null, originalPath, originalId, 1920),
                 exifMimeTypes.indexOf(mimeType) !== -1
                     ? getImageExif.bind(null, originalPath)
                     : (cb) => cb()
