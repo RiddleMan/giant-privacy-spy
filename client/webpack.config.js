@@ -7,6 +7,7 @@
 'use strict';
 import webpack from 'webpack';
 import path from 'path';
+import autoprefixer from 'autoprefixer';
 
 const API_URL = process.env['__API_URL__'] || 'http://localhost:3001/'; //eslint-disable-line
 
@@ -39,7 +40,7 @@ export default {
         },
         {
             test: /\.scss/,
-            loader: 'style-loader!css-loader!autoprefixer-loader?browsers=last 2 versions!sass-loader'
+            loader: 'style-loader!css-loader!postcss-loader!sass-loader'
         },
         {
             test: /\.json/,
@@ -49,6 +50,10 @@ export default {
             loader: 'url-loader?limit=8192'
         }]
     },
+
+    postcss: [
+        autoprefixer({ browsers: 'last 2 versions' })
+    ],
 
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
