@@ -16,7 +16,8 @@ const geohash = require('ngeohash');
 const geolib = require('geolib');
 const fs = require('fs');
 const tmp = require('tmp');
-const im = require('imagemagick');
+// const im = require('imagemagick');
+const gm = require('gm').subClass({imageMagick: true});
 const path = require('path');
 
 const getGrid = () => {
@@ -564,36 +565,33 @@ const createThumbnails = (imgStream, mimeType, fileName, cb) => {
     };
 
     const resize = (originalImgPath, originalId, width, cb) => {
-        im.identify(['-format', '%wx%h', originalImgPath], (err, rawDim) => {
-            if(err)
-                return cb(err);
+        // im.identify(['-format', '%wx%h', originalImgPath], (err, rawDim) => {
+        //     if(err)
+        //         return cb(err);
+        //
+        //     const dims = rawDim.split('x');
+        //     const [w, h] = dims;
+        //
+        //     if(w < width)
+        //         return cb(null, originalId);
+        //
+        //     const ratio = w / width > 1 ? 1 : w / width;
+        //
+        //     const rDim = {
+        //         w: width,
+        //         h: h * ratio
+        //     };
 
-            const dims = rawDim.split('x');
-            const [w, h] = dims;
-
-            if(w < width)
-                return cb(null, originalId);
-
-            const ratio = w / width > 1 ? 1 : w / width;
-
-            const rDim = {
-                w: width,
-                h: h * ratio
-            };
-
-            const destPath = path.join(_tmpPath, '' + width);
-            im.resize({
-                srcPath: originalImgPath,
-                dstPath: destPath,
-                width: rDim.w,
-                height: rDim.h
-            }, (err) => {
+        const destPath = path.join(_tmpPath, '' + width);
+        gm(originalImgPath)
+            .resize(width, width)
+            .write(destPath, (err) => {
                 if(err)
                     return cb(err);
 
                 saveToGFS(destPath, cb);
             });
-        });
+        // });
     };
 
     waterfall([
@@ -616,7 +614,7 @@ const createThumbnails = (imgStream, mimeType, fileName, cb) => {
             const originalPath = path.join(_tmpPath, fileName);
             _originalId = originalId;
 
-            parallel([
+            series([
                 resize.bind(null, originalPath, originalId, 500),
                 resize.bind(null, originalPath, originalId, 800),
                 resize.bind(null, originalPath, originalId, 1000),

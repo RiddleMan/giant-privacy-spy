@@ -4,14 +4,17 @@ services:
     build:
       context: ./client
       args:
-        API_URL: "http://192.168.3.67:3001/"
+        API_URL: "http://localhost:3001/"
     ports:
-      - "80:8080"
+      - "8080:8080"
     links:
       - gps-server
     depends_on:
       - gps-server
   gps-server:
+    environment:
+      TMP: /tmp
+    mem_limit: 100m
     build: ./server
     links:
       - gps-db
@@ -19,11 +22,12 @@ services:
       - "3001:3001"
     depends_on:
       - gps-db
-    tmpfs: /tmp
+    volumes:
+      - ./volumes/tmp:/tmp
   gps-db:
     image: mongo:3.2
     ports:
       - "27017:27017"
     volumes:
-      - /volumes/db/:/data/db
-      - /volumes/configdb/:/data/configdb
+      - ./volumes/db/:/data/db
+      - ./volumes/configdb/:/data/configdb

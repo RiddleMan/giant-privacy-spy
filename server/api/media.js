@@ -2,10 +2,9 @@ const api = require('../utils').api('/media');
 const isLogged = require('../auth').isLogged;
 const Busboy = require('busboy');
 const Media = require('../models/Media');
-const mongoose = require('mongoose');
 const _ = require('lodash');
 
-api.get('/boxes', isLogged, (req, res) => {
+api.get('/boxes', isLogged, (req, res, next) => {
     Media.boxFiles({
         startPosition: req.query.startPos,
         endPosition: req.query.endPos,
@@ -18,13 +17,13 @@ api.get('/boxes', isLogged, (req, res) => {
         _user: req.user.id
     }, (err, results) => {
         if(err)
-            return res.sendStatus(500);
+            return next(err);
 
         res.send(results);
     });
 });
 
-api.get('/', isLogged, (req, res) => {
+api.get('/', isLogged, (req, res, next) => {
     Media.unboxFiles({
         box: req.query.box,
 
@@ -39,13 +38,13 @@ api.get('/', isLogged, (req, res) => {
         _user: req.user.id
     }, (err, results) => {
         if(err)
-            return res.sendStatus(500);
+            return next(err);
 
         res.send(results);
     });
 });
 
-api.get('/:id', isLogged, (req, res) => {
+api.get('/:id', isLogged, (req, res, next) => {
     Media.getFile({
         id: req.params.id,
 
@@ -59,7 +58,7 @@ api.get('/:id', isLogged, (req, res) => {
         _user: req.user.id
     }, (err, media) => {
         if(err)
-            return res.sendStatus(500);
+            return next(err);
 
         if(!media)
             return res.sendStatus(404);
@@ -68,7 +67,7 @@ api.get('/:id', isLogged, (req, res) => {
     });
 });
 
-api.post('/', isLogged, (req, res) => {
+api.post('/', isLogged, (req, res, next) => {
     if(!req.is('multipart/form-data'))
         res.sendStatus(415);
 
@@ -86,7 +85,7 @@ api.post('/', isLogged, (req, res) => {
             mimeType
         }, (err) => {
             if(err)
-                return res.sendStatus(500);
+                return next(err);
 
             res.writeHead(201, { Connection: 'close' });
             res.end();
@@ -96,13 +95,13 @@ api.post('/', isLogged, (req, res) => {
     req.pipe(busboy);
 });
 
-api.get('/static/:id', (req, res) => {
+api.get('/static/:id', (req, res, next) => {
     Media.getStaticFile(req.params.id, (err, file) => {
         if(err && err.code === 'ENOENT')
             return res.sendStatus(404);
 
         if(err)
-            return res.sendStatus(500);
+            return next(err);
 
         res.writeHead(200, {
             'Content-type': file.mimeType //TODO: Forever cache
@@ -111,7 +110,7 @@ api.get('/static/:id', (req, res) => {
     });
 });
 
-api.put('/', isLogged, (req, res) => {
+api.put('/', isLogged, (req, res, next) => {
     const id = req.body._id;
 
     if(!id)
@@ -123,19 +122,19 @@ api.put('/', isLogged, (req, res) => {
 
     Media.updateFile(id, update, (err) => {
         if(err)
-            return res.sendStatus(500);
+            return next(err);
 
         res.sendStatus(200);
     });
 });
 
-api.delete('/:id', isLogged, (req, res) => {
+api.delete('/:id', isLogged, (req, res, next) => {
     Media.remove(
         req.params.id,
         req.user._id,
         (err) => {
             if(err)
-                return res.sendStatus(500);
+                return next(err);
 
             res.sendStatus(200);
         });
