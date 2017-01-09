@@ -1,4 +1,4 @@
-const strategy = require('./jwtStrategy')
+const strategy = require('./jwtStrategy');
 strategy.register();
 const passport = require('passport');
 module.exports = {

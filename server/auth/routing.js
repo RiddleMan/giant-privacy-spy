@@ -2,16 +2,41 @@
 
 const api = require('../utils')
     .api('/auth');
+const User = require('../models/User');
 const getToken = require('./jwtStrategy').getToken;
 const isLogged = require('./authMiddleware');
 
-api.post('/login', (req, res) => {
+const getTokenCtrl = (req, res) => {
     getToken(req.body.user, req.body.password, (err, token) => {
         if(err)
             return res.sendStatus(401);
 
         res.json({
             token
+        });
+    });
+};
+
+api.post('/login', getTokenCtrl);
+
+api.post('/register', (req, res) => {
+    User.findOne({
+        name: req.body.user
+    }, (err, user) => {
+        if(user)
+            return res.send(409);
+
+        const obj = new User({
+            name: req.body.user,
+            email: req.body.email,
+            password: req.body.password
+        });
+
+        obj.save((err) => {
+            if(err)
+                return res.send(500);
+
+            getTokenCtrl(req, res);
         });
     });
 });

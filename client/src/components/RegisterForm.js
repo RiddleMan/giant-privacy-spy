@@ -6,42 +6,31 @@ import LoginInput from './LoginInput';
 import LoginFormHeader from './LoginFormHeader';
 import ContentLoader from './ContentLoader';
 
-const LoginButton = ({ submitting }) => {
+const RegisterButton = ({ submitting }) => {
     return (
         <RaisedButton
-            primary
-            style={{
-                flex: 1,
-                marginLeft: 10
-            }}
-            type="submit"
             disabled={submitting}
-            label={
-                <ContentLoader
-                    isLoading={submitting}>Login</ContentLoader>
-            } />
-    );
-};
-
-const RegisterButton = ({ onClick }) => {
-    return (
-        <RaisedButton
+            type="submit"
             style={{
                 flex: 1
             }}
-            secondary
-            onClick={onClick}
-            label="Register" />
+            primary
+            label={
+                <ContentLoader
+                    isLoading={submitting}>Register</ContentLoader>
+            } />
     );
 };
 
 const LoginFields = (props) => {
     const {
         handleSubmit,
-        onRegister,
         fields: {
             user,
-            password
+            password,
+            repassword,
+            // location,
+            email
         },
         error,
         submitting
@@ -60,29 +49,32 @@ const LoginFields = (props) => {
                 name="username"
                 label="Username"
                 errorText={user.touched && user.error}
-                {...user}
-                />
+                {...user} />
+            <LoginInput
+                name="email"
+                label="Email"
+                errorText={user.touched && email.error}
+                {...email} />
             <LoginInput
                 name="password"
                 type="password"
                 label="Password"
                 errorText={password.touched && password.error}
                 {...password}/>
-            {error && <p>Wrong username or password</p>}
-            <div style={{
-                flex: 1,
-                display: 'flex'
-            }}>
-                <RegisterButton
-                    onClick={onRegister} />
-                <LoginButton
-                    submitting={submitting} />
-            </div>
+            <LoginInput
+                name="repassword"
+                type="password"
+                label="Confirm password"
+                errorText={repassword.touched && repassword.error}
+                {...repassword}/>
+            {error && <p>dupa</p>}
+            <RegisterButton
+                submitting={submitting} />
         </form>
     );
 };
 
-const LoginForm = (props) => {
+const RegisterForm = (props) => {
     const formStyle = {
         position: 'absolute',
         zIndex: 10000,
@@ -104,4 +96,4 @@ const LoginForm = (props) => {
     );
 };
 
-export default LoginForm;
+export default RegisterForm;

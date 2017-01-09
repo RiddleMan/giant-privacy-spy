@@ -14,7 +14,7 @@ api.get('/boxes', isLogged, (req, res, next) => {
         before: req.query.before,
         extensions: req.query.extensions,
         tags: req.query.tags,
-        _user: req.user.id
+        _user: req.user._id
     }, (err, results) => {
         if(err)
             return next(err);
@@ -35,7 +35,7 @@ api.get('/', isLogged, (req, res, next) => {
         page: req.query.page && parseInt(req.query.page),
         sort: req.query.sort,
         tags: req.query.tags,
-        _user: req.user.id
+        _user: req.user._id
     }, (err, results) => {
         if(err)
             return next(err);
@@ -55,7 +55,7 @@ api.get('/:id', isLogged, (req, res, next) => {
         extensions: req.query.extensions,
         sort: req.query.sort,
         tags: req.query.tags,
-        _user: req.user.id
+        _user: req.user._id
     }, (err, media) => {
         if(err)
             return next(err);
@@ -72,7 +72,7 @@ api.post('/', isLogged, (req, res, next) => {
         res.sendStatus(415);
 
     const media = new Media({
-        _user: req.user
+        _user: req.user._id
     });
     const busboy = new Busboy({
         headers: req.headers
@@ -117,7 +117,7 @@ api.put('/', isLogged, (req, res, next) => {
         res.sendStatus(400);
 
     const update = Object.assign(_.omit(req.body, ['_id']), {
-        _user: req.user.id
+        _user: req.user._id
     });
 
     Media.updateFile(id, update, (err) => {

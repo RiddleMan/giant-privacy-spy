@@ -16,7 +16,6 @@ const geohash = require('ngeohash');
 const geolib = require('geolib');
 const fs = require('fs');
 const tmp = require('tmp');
-// const im = require('imagemagick');
 const gm = require('gm').subClass({imageMagick: true});
 const path = require('path');
 
@@ -176,7 +175,8 @@ MediaSchema.statics.boxFiles = function(predicate, cb) {
     const match = {
         _geoHash: {
             $in: bboxes
-        }
+        },
+        _user: predicate._user
     };
 
     if(predicate.searchPhrase)
@@ -222,7 +222,8 @@ MediaSchema.statics.getFile = function(predicate, cb) {
     }, predicate);
 
     const match = {
-        _id: new mongoose.Types.ObjectId(predicate.id)
+        _id: new mongoose.Types.ObjectId(predicate.id),
+        _user: predicate._user
     };
 
     if(_predicate.searchPhrase)
@@ -408,7 +409,8 @@ MediaSchema.statics.updateFile = function(id, update, cb) {
     }
 
     model.findOne({
-        _id: new mongoose.Types.ObjectId(id)
+        _id: new mongoose.Types.ObjectId(id),
+        _user: update._user
     }, function(err, media) {
         Object.keys(_update)
             .filter((key) => key !== '_user')
@@ -436,7 +438,8 @@ MediaSchema.statics.unboxFiles = function(predicate, cb) {
     }, predicate);
 
     const match = {
-        _geoHash: new RegExp(`^${_predicate.box}`)
+        _geoHash: new RegExp(`^${_predicate.box}`),
+        _user: predicate._user
     };
 
     if(_predicate.searchPhrase)
@@ -565,23 +568,6 @@ const createThumbnails = (imgStream, mimeType, fileName, cb) => {
     };
 
     const resize = (originalImgPath, originalId, width, cb) => {
-        // im.identify(['-format', '%wx%h', originalImgPath], (err, rawDim) => {
-        //     if(err)
-        //         return cb(err);
-        //
-        //     const dims = rawDim.split('x');
-        //     const [w, h] = dims;
-        //
-        //     if(w < width)
-        //         return cb(null, originalId);
-        //
-        //     const ratio = w / width > 1 ? 1 : w / width;
-        //
-        //     const rDim = {
-        //         w: width,
-        //         h: h * ratio
-        //     };
-
         const destPath = path.join(_tmpPath, '' + width);
         gm(originalImgPath)
             .resize(width, width)
@@ -591,7 +577,6 @@ const createThumbnails = (imgStream, mimeType, fileName, cb) => {
 
                 saveToGFS(destPath, cb);
             });
-        // });
     };
 
     waterfall([

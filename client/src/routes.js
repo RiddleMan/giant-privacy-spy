@@ -1,5 +1,12 @@
 import React, { Component, PropTypes } from 'react';
-import { App, MainPage, LoginPage, FileListPage, FilePage } from './containers';
+import {
+    App,
+    MainPage,
+    LoginPage,
+    FileListPage,
+    FilePage,
+    RegisterPage
+} from './containers';
 import { Router, Route, hashHistory } from 'react-router';
 
 class Routes extends Component {
@@ -25,6 +32,7 @@ class Routes extends Component {
             <Router history={hashHistory}>
                 <Route component={ App }>
                     <Route path="/login" component={ LoginPage } />
+                    <Route path="/register" component={ RegisterPage } />
                     <Route path="/" component={ MainPage } onEnter={this.isAuthorized}>
                         <Route path="/file/:id" component={ FilePage }/>
                         <Route

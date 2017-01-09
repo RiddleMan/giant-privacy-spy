@@ -1,6 +1,6 @@
-import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
 import { reduxForm } from 'redux-form';
-import { login } from '../utils/api';
+import { register } from '../utils/api';
 import { changeToken } from '../actions/token';
 import { routeActions } from 'react-router-redux';
 import { connect } from 'react-redux';
@@ -30,25 +30,38 @@ const validatePassword = validator('password')(
             return 'Too short';
     });
 
+const validateRePassword = (values) => {
+    const pass = values.password;
+    const repass = values.repassword;
+
+    if(pass !== repass)
+        return {
+            repassword: 'Password must match'
+        };
+};
+
 const validate = (values) => {
     return {
         ...validateUser(values),
-        ...validatePassword(values)
+        ...validatePassword(values),
+        ...validateRePassword(values)
     };
 };
 
 export default reduxForm({
     form: 'login',
-    fields: ['user', 'password'],
+    fields: ['user', 'password', 'email', 'repassword'],
     validate
 }, undefined, {
     onSubmit: (values, dispatch) => {
         const user = values.user;
         const password = values.password;
+        const email = values.email;
 
-        return login({
+        return register({
             user,
-            password
+            password,
+            email
         })
         .then((response) => {
             return response.json();
@@ -60,10 +73,9 @@ export default reduxForm({
             return {};
         }, () => {
             return {
-                _error: 'Wrong username or password'
+                _error: 'duuuuuupa'
             };
         });
     }
 })(connect(undefined, {
-    onRegister: () => routeActions.push('/register')
-})(LoginForm));
+})(RegisterForm));

@@ -1,6 +1,7 @@
 import param from 'jquery-param';
 
 const LOGIN = __API_URL__ + 'auth/login';
+const REGISTER = __API_URL__ + 'auth/register';
 const AUTH = __API_URL__ + 'auth';
 
 const GET_BOXES = __API_URL__ + 'api/media/boxes';
@@ -111,6 +112,21 @@ export const login = ({
     return fetch(LOGIN, getRequest({
         method: 'POST',
         body: JSON.stringify({
+            user,
+            password
+        })
+    }));
+};
+
+export const register = ({
+    email,
+    user,
+    password
+}) => {
+    return fetch(REGISTER, getRequest({
+        method: 'POST',
+        body: JSON.stringify({
+            email,
             user,
             password
         })
