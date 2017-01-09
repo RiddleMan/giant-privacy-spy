@@ -18,8 +18,7 @@ Example file from google
 const TrackSchema = new Schema({
     _createDate: {
         type: Date,
-        default: Date.now,
-        index: true
+        default: Date.now
     },
     loc: GeoJSON.Point,
     accuracy: Number,
@@ -78,6 +77,10 @@ TrackSchema.virtual('longitudeE7')
 
 TrackSchema.index({
     loc: '2dsphere'
+});
+
+TrackSchema.index({
+    _createDate: 1
 });
 
 module.exports = mongoose.model('Track', TrackSchema);

@@ -1,8 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { GridTile } from 'material-ui/GridList';
 import { getFileUrl } from '../../utils/api';
 import moment from 'moment';
-import pureRender from '../../utils/pureRender';
 import DownloadButton from './DownloadButton';
 
 const TimeDescriptor = (props) => {
@@ -58,7 +57,7 @@ const GenericPreview = (props) => {
     );
 };
 
-class FilePreview extends Component {
+class FilePreview extends PureComponent {
     render() {
         const { mimeType } = this.props;
 
@@ -69,4 +68,4 @@ class FilePreview extends Component {
     }
 }
 
-export default pureRender(FilePreview);
+export default FilePreview;

@@ -7,6 +7,7 @@ import {
     FilePage,
     RegisterPage
 } from './containers';
+import { clear } from './actions/map';
 import { Router, Route, hashHistory } from 'react-router';
 
 class Routes extends Component {
@@ -14,6 +15,7 @@ class Routes extends Component {
         super(props);
 
         this.isAuthorized = this.isAuthorized.bind(this);
+        this.onMapLeave = this.onMapLeave.bind(this);
     }
 
     isAuthorized(nextState, replace) {
@@ -27,13 +29,27 @@ class Routes extends Component {
         }
     }
 
+    onMapLeave() {
+        const store = this.context.store;
+
+        store.dispatch(clear());
+    }
+
     render() {
         return (
             <Router history={hashHistory}>
                 <Route component={ App }>
-                    <Route path="/login" component={ LoginPage } />
-                    <Route path="/register" component={ RegisterPage } />
-                    <Route path="/" component={ MainPage } onEnter={this.isAuthorized}>
+                    <Route
+                        path="/login"
+                        component={ LoginPage } />
+                    <Route
+                        path="/register"
+                        component={ RegisterPage } />
+                    <Route
+                        path="/"
+                        component={ MainPage }
+                        onLeave={this.onMapLeave}
+                        onEnter={this.isAuthorized}>
                         <Route path="/file/:id" component={ FilePage }/>
                         <Route
                             path="/list/:id"

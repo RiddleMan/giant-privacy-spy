@@ -6,7 +6,8 @@ import {
     BOXES_RESPONSE,
 
     TAGS_REQUEST,
-    TAGS_RESPONSE
+    TAGS_RESPONSE,
+    CLEAR
 } from '../constants/map';
 import debounce from 'lodash/debounce';
 import { getBoxes, getAllTags as apiGetAllTags } from '../utils/api';
@@ -80,6 +81,12 @@ const getBoxesDebounced = debounce(
             .then((r) => r.json())
             .then((r) => dispatch(responseBoxes(r)));
     }, 500);
+
+export const refresh = () => getBoxesDebounced;
+
+export const clear = () => ({
+    type: CLEAR
+});
 
 export const filterChange = (filters) => {
     return (dispatch, getState) => {

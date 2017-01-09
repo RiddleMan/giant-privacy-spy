@@ -11,6 +11,7 @@ import {
 
     HIDE
 } from '../constants/upload';
+import { refresh } from './map';
 
 const uploadFileRequest = () => ({
     type: UPLOAD_FILE_REQUEST
@@ -38,7 +39,10 @@ export const uploadFile = (file) => {
             token,
             file
         })
-        .then(() => dispatch(uploadFileResponse()));
+        .then(() => {
+            dispatch(refresh());
+            dispatch(uploadFileResponse());
+        });
     };
 };
 

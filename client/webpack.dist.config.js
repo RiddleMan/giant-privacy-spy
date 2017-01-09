@@ -23,6 +23,7 @@ export default {
     devtool: false,
 
     entry: [
+        'whatwg-fetch',
         './src/index.js'
     ],
 
@@ -63,9 +64,6 @@ export default {
         }),
         new webpack.optimize.AggressiveMergingPlugin(),
         new webpack.NoErrorsPlugin(),
-        new webpack.ProvidePlugin({
-            fetch: 'babel-loader!imports?this=>global!exports?global.fetch!whatwg-fetch'
-        }),
         new webpack.DefinePlugin({
             __DEV__: false,
             __DEVTOOLS__: false,

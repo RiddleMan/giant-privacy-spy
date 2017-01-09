@@ -19,6 +19,7 @@ export default {
 
     devtool: 'eval-source-map',
     entry: [
+        'whatwg-fetch',
         'webpack-dev-server/client?http://0.0.0.0:3000',
         'webpack/hot/only-dev-server',
         'react-hot-loader/patch',
@@ -55,9 +56,6 @@ export default {
             __DEV__: true,
             __DEVTOOLS__: false,
             __API_URL__: `\'${API_URL}\'`
-        }),
-        new webpack.ProvidePlugin({
-            fetch: 'babel-loader!imports?this=>global!exports?global.fetch!whatwg-fetch'
         })
     ]
 

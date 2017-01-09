@@ -30,22 +30,36 @@ const mapToDoc = (user) => ({
 };
 
 const trackStream = (user) => {
+    let counter = 0;
+    const BATCH_SIZE = 1000;
     return new Writable({
         objectMode: true,
-        writev(chunks, cb) {
-            const mapper = mapToDoc(user);
-
-            const docs = chunks.map(({chunk}) =>
-                mapper(chunk));
-
-            Track.collection.insert(docs, cb);
-        },
+        // writev(chunks, cb) {
+        //     const mapper = mapToDoc(user);
+        //
+        //     const docs = chunks.map(({chunk}) =>
+        //         mapper(chunk));
+        //
+        //     if(counter % BATCH_SIZE === 0)
+        //         setTimeout(() => {
+        //             Track.collection.insert(docs, cb);
+        //         }, 1000);
+        //     else
+        //         Track.collection.insert(docs, cb);
+        //     counter++;
+        // },
         write(googleTrack, enc, cb) {
-            Track.collection.insert(
-                [
-                    mapToDoc(user)(googleTrack)
-                ],
-                cb);
+            const doc = [
+                mapToDoc(user)(googleTrack)
+            ];
+
+            if(counter % BATCH_SIZE === 0)
+                setTimeout(() => {
+                    Track.collection.insert(doc, cb);
+                }, 1000);
+            else
+                Track.collection.insert(doc, cb);
+            counter++;
         }
     });
 };

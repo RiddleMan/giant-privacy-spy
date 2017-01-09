@@ -12,6 +12,7 @@ import {
 
     CLEAR
 } from '../constants/file';
+import { refresh } from './map';
 import { routeActions } from 'react-router-redux';
 
 const requestProp = (update) => ({
@@ -38,7 +39,11 @@ export const filePropChange = (update) =>
             _id,
             update
         })
-        .then(() => dispatch(responseProp()));
+        .then(() => {
+            dispatch(refresh());
+            dispatch(getFile(_id));
+            dispatch(responseProp());
+        });
     };
 
 export const clear = () => ({
@@ -80,8 +85,10 @@ export const removeFile = () =>
     (dispatch, getState) => {
         const goToFile = (id) =>
             dispatch(routeActions.replace(`/file/${id}`));
-        const goToMap = () =>
+        const goToMap = () => {
+            dispatch(refresh());
             dispatch(routeActions.replace('/'));
+        };
 
         const {
             token,

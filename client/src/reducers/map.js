@@ -5,7 +5,8 @@ import {
     FILTER_CHANGE,
 
     TAGS_RESPONSE,
-    TAGS_REQUEST
+    TAGS_REQUEST,
+    CLEAR
 } from '../constants/map';
 
 const initialState = {
@@ -63,6 +64,8 @@ export default (state = initialState, action) => {
                 items: action.tags
             }
         };
+    case CLEAR:
+        return initialState;
     default:
         return state;
     }
