@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Provider } from 'react-redux';
 import Routes from '../routes';
-import configureStore from '../store/configureStore';
-const store = configureStore();
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 let DevTools;
@@ -19,6 +17,8 @@ class Root extends Component {
     }
 
     render() {
+        const { store } = this.props;
+
         return (
             <div className="sc-app">
                 <Provider store={store}>

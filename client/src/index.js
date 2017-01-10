@@ -6,6 +6,8 @@ import Root from './containers/Root';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import './styles/main.scss';
 import { AppContainer } from 'react-hot-loader';
+import configureStore from './store/configureStore';
+const store = configureStore();
 
 injectTapEventPlugin();
 
@@ -16,7 +18,7 @@ const content = document.getElementById('content');
 
 render(
     <AppContainer>
-        <Root />
+        <Root store={store}/>
     </AppContainer>,
     content
 );
@@ -27,7 +29,7 @@ if(module.hot) {
 
         render(
             <AppContainer>
-                <NextRoot />
+                <NextRoot store={store}/>
             </AppContainer>,
             content
         );

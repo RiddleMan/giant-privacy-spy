@@ -5,7 +5,6 @@ import { fitContainer } from '../utils/styles';
 import { connect } from 'react-redux';
 import { centerChange } from '../actions/map';
 import { goToList } from '../actions/list';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import Snackbar from 'material-ui/Snackbar';
 import { hide } from '../actions/upload';
 import { toggleLeftNav } from '../actions/layout';
