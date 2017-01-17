@@ -13,7 +13,7 @@ export default ({ children, isLoading }) => {
                     left: 0,
                     top: '-6px'
                 }}
-                size={0.3}/> }
+                size={30}/> }
             {children}
         </div>
     );

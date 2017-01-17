@@ -119,7 +119,7 @@ class FileListPage extends Component {
                         left: '50%',
                         transform: 'translateX(-50%)'
                     }}
-                    size={1}/> }
+                    size={50}/> }
             </Paper>);
     }
 }

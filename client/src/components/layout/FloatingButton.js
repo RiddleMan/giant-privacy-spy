@@ -9,7 +9,7 @@ export default class FloatingButton extends Component {
 
         return (
             <FloatingActionButton {...rest}>
-                {isLoading ? <CircularProgress size={0.5} /> : <Add />}
+                {isLoading ? <CircularProgress size={40} /> : <Add />}
             </FloatingActionButton>
         );
     }

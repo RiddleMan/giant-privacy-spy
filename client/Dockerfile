@@ -9,7 +9,5 @@ RUN npm install
 
 RUN API_URL=${API_URL} npm run build
 
-RUN rm -Rf ./node_modules
-
 EXPOSE 8080
 CMD [ "npm", "run", "run" ]
